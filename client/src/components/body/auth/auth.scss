@@ -1,0 +1,83 @@
+.login_page {
+    max-width: 500px;
+    margin: auto;
+    color: rgb(71, 71, 71);
+    padding: 0 15px;
+    h2 {
+        text-decoration: uppercase;
+        font-size: 2rem;
+        margin: 20px 0;
+        letter-spacing: 1.5px;
+    }
+    input {
+        width: 100%;
+        height: 35px;
+        margin: 10px 0;
+        border: 2px solid #777;
+        outline: none;
+        padding: 0 10px;
+    }
+    .row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap-reverse;
+        align-items: flex-start;
+        a {
+            color: crimson;
+        }
+        
+        button {
+            width: 150px;
+            padding: 10px 0;
+            color: white;
+            background: rgb(69, 39, 204);
+            text-decoration: uppercase;
+            letter-spacing: 1.5px;
+            margin-right: 10px;
+        }
+    }
+    p {
+        margin: 10px 0;
+    }
+    a {
+        color: #111;
+        font-weight: 600;
+    }
+    
+}
+
+// Forgot Password
+
+.fg_pass {
+    h2 {
+        color: #555;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 2rem;
+        margin: 50px 0;
+        letter-spacing: 1.3px;
+    }
+    .row {
+        width: 500px;
+        margin: auto;
+        padding: 0 10px;
+        input {
+            width: 100%;
+            height: 45px;
+            border: 1px solid #ccc;
+            outline: none;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+        button {
+            background: #333;
+            color: white;
+            padding: 10px 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            border-radius: 3px;
+            margin-top: 15px;
+        }
+    }
+
+}

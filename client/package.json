@@ -38,5 +38,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "node-sass": "^6.0.0"
+  },
+  "proxy": "http://localhost:5000"
+
 }
