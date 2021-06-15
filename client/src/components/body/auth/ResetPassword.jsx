@@ -4,6 +4,8 @@ import {useParams} from 'react-router-dom'
 import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import {isLength, isMatch} from '../../utils/validation/Validation'
 
+// const {BASE_URL} = process.env
+
 
 
 
@@ -33,7 +35,7 @@ function ResetPassword() {
             return setData({...data, err: "Password did not match.", success: ''})
 
         try {
-            const res = await axios.post('/user/reset', {password}, {
+            const res = await axios.post(`/user/reset`, {password}, {
                 headers: {Authorization: token}
             })
 

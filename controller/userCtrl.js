@@ -9,6 +9,7 @@ const fetch = require('node-fetch')
 
 const client = new OAuth2(process.env.MAILING_SERVICE_CLIENT_ID)
 
+// const {BASE_URL} = process.env
 const {CLIENT_URL} = process.env
 
 const userCtrl = {
@@ -79,7 +80,7 @@ const userCtrl = {
             const refresh_token = createRefreshToken({id: user._id})
             res.cookie('refreshtoken', refresh_token, {
                 httpOnly: true,
-                path: '/user/refresh_token',
+                path: `/user/refresh_token`,
                 maxAge: 7*24*60*60*1000 // 7 days
             })
 

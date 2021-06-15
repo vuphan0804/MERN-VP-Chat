@@ -4,6 +4,9 @@ import {isEmail} from '../../utils/validation/Validation'
 import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 
 
+// const {BASE_URL} = process.env
+
+
 const initialState = {
     email: '',
     err: '',
@@ -27,7 +30,7 @@ function ForgotPassword() {
             return setData({...data, err: 'Invalid emails.', success: ''})
 
         try {
-            const res = await axios.post('/user/forgot', {email})
+            const res = await axios.post(`/user/forgot`, {email})
             return setData({...data, err: '', success: res.data.msg})
         } catch (err) {
             err.response.data.msg && setData({...data, err: err.response.data.msg, success: ''})

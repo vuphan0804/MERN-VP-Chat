@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
+const path = require('path')
 
 
 const app = express()
@@ -28,10 +29,19 @@ mongoose.connect(URI, {
     useUnifiedTopology: true
 }, err => {
     if(err) throw err;
-    console.log("Connect to mongodb");
+    console.log("Connected to mongodb")
 })
 
-const PORT = process.env.PORT || 5000
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('client/build'))
+    app.get('*', (req, res)=>{
+        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+    })
+}
+
+
+
+const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
-    console.log('Server is running on port', PORT);
+    console.log('Server is running on port', PORT)
 })

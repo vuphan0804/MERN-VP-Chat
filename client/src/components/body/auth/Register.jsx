@@ -4,6 +4,8 @@ import axios from 'axios'
 import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import {isEmpty, isEmail, isLength, isMatch} from '../../utils/validation/Validation'
 
+// const {BASE_URL} = process.env
+
 
 const initialState = {
     name: '',
@@ -40,7 +42,7 @@ function Register() {
             return setUser({...user, err: "Password did not match.", success: ''})
 
         try {
-            const res = await axios.post('/user/register', {
+            const res = await axios.post(`/user/register`, {
                 name, email, password
             })
 

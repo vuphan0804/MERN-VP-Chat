@@ -5,6 +5,8 @@ import axios from 'axios'
 
 import './header.scss'
 
+// const {BASE_URL} = process.env
+
 function Header() {
     const auth = useSelector(state => state.auth)
 
@@ -13,7 +15,7 @@ function Header() {
 
     const handleLogout = async () => {
         try {
-            await axios.get('/user/logout')
+            await axios.get(`/user/logout`)
             localStorage.removeItem('firstLogin')
             window.location.href = "/";
         } catch (err) {
