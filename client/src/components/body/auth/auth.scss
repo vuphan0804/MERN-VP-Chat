@@ -1,3 +1,5 @@
+@import '../../../index.scss';
+
 .login_page {
     max-width: 500px;
     margin: auto;
@@ -30,7 +32,7 @@
             width: 150px;
             padding: 10px 0;
             color: white;
-            background: rgb(69, 39, 204);
+            background: $primary-color;
             text-decoration: uppercase;
             letter-spacing: 1.5px;
             margin-right: 10px;
@@ -38,6 +40,7 @@
     }
     p {
         margin: 10px 0;
+        padding-bottom: 5px;
     }
     a {
         color: #111;
@@ -100,5 +103,20 @@
             letter-spacing: 1.3px;
             box-shadow: 0 2px 4px #777;
         }
+    }
+}
+.login_page {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: -30px 30px 20px rgba($color: #1d1c1c, $alpha: 0.3);
+    animation: animate 5s ease-in-out infinite;
+    animation-delay: -2.5s;
+}
+@keyframes animate {
+    0%, 100% {
+        transform: translateY(10px);
+    }
+    50% {
+        transform: translateY(-10px);
     }
 }

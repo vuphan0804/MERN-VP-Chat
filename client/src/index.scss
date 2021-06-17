@@ -1,3 +1,5 @@
+$base-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
+$primary-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
 * {
     padding: 0;
     box-sizing: border-box;
@@ -20,6 +22,8 @@
     box-shadow: 0 0 20px #eee;
     margin: 0 auto;
     overflow: hidden;
+    background: $primary-color;
+    background: $base-color;
   }
   a{
     text-decoration: none;
