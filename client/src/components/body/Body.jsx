@@ -1,6 +1,6 @@
 // import lib
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import { Switch, Route} from "react-router-dom";
 import NotFound from "../utils/NotFound/NotFound";
 import { useSelector } from "react-redux";
 // import auth
@@ -14,16 +14,23 @@ import Profile from "../body/profile/Profile";
 import EditUser from "../body/profile/EditUser";
 
 import Home from "../body/home/Home";
+import HomeTest from "../body/homeTest/Home";
 
 import "./body.scss";
 
 function Body() {
   const auth = useSelector((state) => state.auth);
   const { isLogged, isAdmin } = auth;
+
   return (
     <section>
       <Switch>
         <Route path={`/`} component={Home} exact />
+
+        <Route path={`/test`} exact >
+        {isLogged ? <HomeTest /> : <Login/>}
+          </Route>
+
 
         <Route path={`/login`} component={isLogged ? NotFound : Login} exact />
         <Route
