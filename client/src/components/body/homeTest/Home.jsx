@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
+import {Redirect} from 'react-router-dom'
 import { io } from "socket.io-client";
 import axios from 'axios';
 import { useSelector } from "react-redux";
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 import Conversation from "./conversation/Conversation";
 import Message from "./message/Message";
@@ -32,6 +34,11 @@ function Home() {
   //     socket.emit('user-disconnected', {userId: authState.user._id});
   //   })
   // }, [])
+
+  useEffect(()=> {
+    setAuthState(auth);
+    setTokenState(token);
+  },[])
 
   useEffect(()=>{
     setAuthState(auth);
@@ -85,16 +92,16 @@ function Home() {
       {/* ChatBox */}
       <div className="chatBox">
         <div className="chatBoxWrapper">
-          <div className="chatBoxTop">
-            <Message />
-            <Message own={true} />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-          </div>
+            <ScrollToBottom className="chatBoxTop">
+              <Message />
+              <Message own={true} />
+              <Message />
+              <Message />
+              <Message />
+              <Message />
+              <Message />
+              <Message />
+            </ScrollToBottom>
           <div className="chatBoxBottom">
             <textarea
               className="chatMessageInput"
@@ -115,6 +122,8 @@ function Home() {
         </div>
       </div>
     </div>
+    
+    
   )
 }
 

@@ -30,6 +30,7 @@ app.use(morgan("dev"));
 app.use("/user", require("./routes/userRoute"));
 app.use("/api", require("./routes/upload"));
 app.use("/api", require("./routes/conversationRoute"));
+app.use("/api", require("./routes/messageRoute"));
 
 // SocketIO:
 io.on("connection", (socket) => {

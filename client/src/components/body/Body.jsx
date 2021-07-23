@@ -28,8 +28,8 @@ function Body() {
         <Route path={`/`} component={Home} exact />
 
         <Route path={`/test`} exact >
-        {isLogged ? <HomeTest /> : <Login/>}
-          </Route>
+          {isLogged ? <HomeTest /> : <Login/>}
+        </Route>
 
 
         <Route path={`/login`} component={isLogged ? NotFound : Login} exact />

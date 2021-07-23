@@ -82,7 +82,7 @@ const conversationCtrl = {
               _id: "$_id",
               type: "$type",
               createdAt: "$createdAt",
-              updateAt: "$updateAt",
+              updatedAt: "$updatedAt",
             },
             members: {
               $push: "$members",
@@ -156,6 +156,88 @@ const conversationCtrl = {
       const insertedNewConversation = await newConversation.save();
 
       res.status(201).json({ conversation: insertedNewConversation });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
+  getDetailConversation: async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      try {
+        const testId = mongoose.Types.ObjectId(conversationId);
+      } catch (error) {
+        return res.status(400).json({ msg: "Conversation does not exsit" });
+      }
+
+      const conversations = await conversationModel.aggregate([
+        {
+          $match: {
+            _id: mongoose.Types.ObjectId(conversationId),
+          },
+        },
+        {
+          $unwind: {
+            path: "$members",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            let: {
+              userId: "$members",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [{ $toString: "$_id" }, "$$userId"],
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  name: 1,
+                  avatar: 1,
+                },
+              },
+            ],
+            as: "members",
+          },
+        },
+        {
+          $unwind: {
+            path: "$members",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              _id: "$_id",
+              type: "$type",
+              createdAt: "$createdAt",
+              updateAt: "$updateAt",
+            },
+            members: {
+              $push: "$members",
+            },
+          },
+        },
+      ]);
+
+      if (conversations.length === 0)
+        return res.status(400).json({ msg: "Conversation does not exsit" });
+
+      const foundCon = conversations[0];
+      const copyCon = Object.assign(foundCon);
+      const { _id } = copyCon;
+      const rest = _.omit(copyCon, "_id");
+      const resData = {
+        ..._id,
+        ...rest,
+      };
+
+      res.json({ conversation: resData });
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
