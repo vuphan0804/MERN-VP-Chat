@@ -1,10 +1,13 @@
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const fullTextSearch = require("fulltextsearch");
 
 const userModel = require("../models/userModel");
 const conversationModel = require("../models/conversationModel");
 
 const { DIRECT_MESSAGE } = require("../constants/conversation");
+
+const fullTextSearchVi = fullTextSearch.vi;
 
 const conversationCtrl = {
   getOnlineUsers: async (req, res) => {
@@ -23,6 +26,7 @@ const conversationCtrl = {
   getMyConversation: async (req, res) => {
     try {
       const { id: userId } = req.user;
+      const { search } = req.query;
 
       const conversations = await conversationModel.aggregate([
         {
@@ -85,6 +89,18 @@ const conversationCtrl = {
             },
           },
         },
+        {
+          $match: {
+            members: {
+              $elemMatch: {
+                $and: [
+                  { name: new RegExp(fullTextSearchVi(search), "i") },
+                  { _id: { $ne: mongoose.Types.ObjectId(userId) } },
+                ],
+              },
+            },
+          },
+        },
       ]);
 
       const resData = conversations.map((con) => {
@@ -96,6 +112,7 @@ const conversationCtrl = {
           ...rest,
         };
       });
+
       res.json({ conversations: resData });
     } catch (err) {
       return res.status(500).json({ msg: err.message });

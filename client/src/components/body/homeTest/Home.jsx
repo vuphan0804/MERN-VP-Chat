@@ -22,6 +22,8 @@ function Home() {
   const [tokenState, setTokenState] = useState(token);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [submitSearchText, setSubmitSearchText] = useState("")
 
   // useEffect(()=>{
   //   console.log(auth, authState);
@@ -50,19 +52,30 @@ function Home() {
       headers: { 
         Authorization: tokenState,
       } ,
-      url: `${BASE_API_URL}/api/me/conversations`,
+      url: `${BASE_API_URL}/api/me/conversations?search=${submitSearchText}`,
     }).then(res => {
       setConversations(res.data.conversations);
+      console.log(res.data)
     }).catch(err => {console.log(err)})
+  }, [auth, token, submitSearchText]);
 
-  }, [auth, token]) 
+  const handleSearchTextOnChange =(e) =>{
+    setSearchText(e.target.value);
+  }
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSubmitSearchText(searchText)
+  }
   
   return(
     <div className="messenger">
       {/* Menu */}
       <div className="chatMenu">
         <div className="chatMenuWrapper">
-          <input placeholder="Search for friends" className="chatMenuInput" />
+          <form onSubmit={handleSearchSubmit}>
+            <input placeholder="Search for friends" className="chatMenuInput" value={searchText} onChange={handleSearchTextOnChange} />
+          </form>
           {
             conversations.map(con => <Conversation key={con._id} conversation={con} userId={authState.user._id}/>)
           }
