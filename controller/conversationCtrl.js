@@ -141,6 +141,15 @@ const conversationCtrl = {
           },
         },
         {
+          $match: {
+            members: {
+              $elemMatch: {
+                name: new RegExp(fullTextSearchVi(search), "i"),
+              },
+            },
+          },
+        },
+        {
           $unwind: {
             path: "$members",
           },
@@ -156,8 +165,10 @@ const conversationCtrl = {
           ...rest,
         };
       });
-      resData.push(selfConversations[0]);
-      resData = _.orderBy(resData, ["updatedAt"], ["desc"]);
+      if (selfConversations.length > 0) {
+        resData.push(selfConversations[0]);
+        resData = _.orderBy(resData, ["updatedAt"], ["desc"]);
+      }
 
       res.json({ conversations: resData });
     } catch (err) {

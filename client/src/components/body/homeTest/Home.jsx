@@ -36,6 +36,7 @@ function Home() {
   const [submitSearchText, setSubmitSearchText] = useState("")
   const [selectedConversationId, setSelectedConversationId] = useState("")
   const [lastestSentMsg, setLastestSentMsg] = useState("")
+  const [selectedOnlineUser, setSelectedOnlineUser] = useState({});
 
   // useEffect(()=>{
   //   console.log(auth, authState);
@@ -71,7 +72,7 @@ function Home() {
     }).then(res => {
       setConversations(res.data.conversations);
     }).catch(err => {console.log(err)})
-  }, [auth, token, submitSearchText, lastestSentMsg]);
+  }, [auth, token, submitSearchText, lastestSentMsg, selectedOnlineUser]);
 
   const handleSearchTextOnChange =(e) =>{
     setSearchText(e.target.value);
@@ -88,6 +89,10 @@ function Home() {
 
   const handleLastestSentMsg = (msg) => {
     setLastestSentMsg(msg);
+  }
+
+  const handleSelectedOnlineUser = (user) => {
+    setSelectedOnlineUser(user)
   }
   
   return(
@@ -120,7 +125,7 @@ function Home() {
       <div className="chatOnline">
         <div className="chatOnlineWrapper">
           {
-            onlineUsers.map(user => <ChatOnline key={user._id} user={user} token={tokenState} />)
+            onlineUsers.map(user => <ChatOnline key={user._id} onlineUser={user} token={tokenState} userId={authState.user._id} setSelectedOnlineUser={handleSelectedOnlineUser}/>)
           }
           
           

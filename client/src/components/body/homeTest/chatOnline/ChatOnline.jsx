@@ -1,23 +1,23 @@
 import React, {useEffect} from "react";
-import {useParams} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 import axios from 'axios'
 
-import {DIRECT_MESSAGE} from '../../../../constants/conversation'
+import {SELF_MESSAGE, DIRECT_MESSAGE} from '../../../../constants/conversation'
 
 import "./ChatOnline.scss";
 
 const BASE_API_URL = "http://localhost:8000"
 
 function ChatOnline(props) {
-  const {user} = props;
-  const {token} = props;
+  const {userId, onlineUser, token, setSelectedOnlineUser} = props;
+  const history = useHistory();
 
   const handleClickedChat = () => {
     axios({
       method: "POST",
       data: {
-        otherMembers: [user._id],
-        type: DIRECT_MESSAGE
+        otherMembers: [onlineUser._id],
+        type: onlineUser._id === userId ? SELF_MESSAGE: DIRECT_MESSAGE
       },
       headers: {
         Authorization: token,
@@ -25,7 +25,9 @@ function ChatOnline(props) {
       url: `${BASE_API_URL}/api/me/conversations`,
     })
       .then((res) => {
-        console.log(res)
+        const selectedOnlineUser = res.data.conversation;
+        setSelectedOnlineUser(selectedOnlineUser);
+        history.push(`/conversations/${selectedOnlineUser._id}`)
       })
       .catch((err) => {
         console.log(err);
@@ -38,12 +40,12 @@ function ChatOnline(props) {
         <div className="chatOnlineImgContainer">
           <img
             className="chatOnlineImg"
-            src={user.avatar}
+            src={onlineUser.avatar}
             alt=""
           />
           <div className="chatOnlineBadge"></div>
         </div>
-        <span className="chatOnlineName">{user.name}</span>
+        <span className="chatOnlineName">{onlineUser.name}</span>
       </div>
     </div>
   );
