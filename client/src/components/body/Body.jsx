@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import { Switch, Route} from "react-router-dom";
 import NotFound from "../utils/NotFound/NotFound";
 import { useSelector } from "react-redux";
+import axios from 'axios';
 // import auth
 import ActivationEmail from "./auth/ActivationEmail";
 import Register from "./auth/Register";
@@ -27,7 +28,7 @@ function Body() {
       <Switch>
         <Route path={`/`} component={Home} exact />
 
-        <Route path={`/test`} exact >
+        <Route path={`/conversations`} >
           {isLogged ? <HomeTest /> : <Login/>}
         </Route>
 

@@ -46,7 +46,7 @@ function Header() {
             </div>
 
             <ul style={transForm}>
-                  <li><Link to="/"><i className="far fa-comments"></i>Chat</Link></li>
+                  <li><Link to="/conversations"><i className="far fa-comments"></i>Chat</Link></li>
                 {
                     isLogged
                     ? userLink()

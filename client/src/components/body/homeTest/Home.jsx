@@ -1,17 +1,24 @@
 import React, {useEffect, useState} from "react";
-import {Redirect} from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams
+} from "react-router-dom";
 import { io } from "socket.io-client";
 import axios from 'axios';
 import { useSelector } from "react-redux";
-import ScrollToBottom from 'react-scroll-to-bottom';
+
 
 import Conversation from "./conversation/Conversation";
-import Message from "./message/Message";
 import ChatOnline from "./chatOnline/ChatOnline";
+import ChatBox from "./chatBox/chatBox";
 
 
 
 import "./home.scss";
+import { Component } from "react";
 
 const BASE_API_URL = "http://localhost:8000"
 // const socket = io(BASE_API_URL);
@@ -19,6 +26,7 @@ const BASE_API_URL = "http://localhost:8000"
 function Home() {
   const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.token);
+  const {conversationId} = useParams();
 
   const [authState, setAuthState] = useState(auth);
   const [tokenState, setTokenState] = useState(token);
@@ -26,6 +34,8 @@ function Home() {
   const [conversations, setConversations] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [submitSearchText, setSubmitSearchText] = useState("")
+  const [selectedConversationId, setSelectedConversationId] = useState("")
+  const [lastestSentMsg, setLastestSentMsg] = useState("")
 
   // useEffect(()=>{
   //   console.log(auth, authState);
@@ -35,12 +45,10 @@ function Home() {
   //   })
   // }, [])
 
-  useEffect(()=> {
-    setAuthState(auth);
-    setTokenState(token);
-  },[])
+
 
   useEffect(()=>{
+   
     setAuthState(auth);
     setTokenState(token);
 
@@ -62,9 +70,8 @@ function Home() {
       url: `${BASE_API_URL}/api/me/conversations?search=${submitSearchText}`,
     }).then(res => {
       setConversations(res.data.conversations);
-      console.log(res.data)
     }).catch(err => {console.log(err)})
-  }, [auth, token, submitSearchText]);
+  }, [auth, token, submitSearchText, lastestSentMsg]);
 
   const handleSearchTextOnChange =(e) =>{
     setSearchText(e.target.value);
@@ -74,9 +81,18 @@ function Home() {
     e.preventDefault();
     setSubmitSearchText(searchText)
   }
+
+  const handleSelectedConversation = (id) => {
+    setSelectedConversationId(id);
+  }
+
+  const handleLastestSentMsg = (msg) => {
+    setLastestSentMsg(msg);
+  }
   
   return(
-    <div className="messenger">
+    <Router>
+      <div className="messenger">
       {/* Menu */}
       <div className="chatMenu">
         <div className="chatMenuWrapper">
@@ -84,44 +100,34 @@ function Home() {
             <input placeholder="Search for friends" className="chatMenuInput" value={searchText} onChange={handleSearchTextOnChange} />
           </form>
           {
-            conversations.map(con => <Conversation key={con._id} conversation={con} userId={authState.user._id}/>)
+            conversations.map(con =>  (
+              <Link to={`/conversations/${con._id}`}>
+                <Conversation  key={con._id} selectedConversation={selectedConversationId === con._id} conversation={con} userId={authState.user._id}/>
+              </Link>
+            ))
           }
           
         </div>
       </div>
       {/* ChatBox */}
-      <div className="chatBox">
-        <div className="chatBoxWrapper">
-            <ScrollToBottom className="chatBoxTop">
-              <Message />
-              <Message own={true} />
-              <Message />
-              <Message />
-              <Message />
-              <Message />
-              <Message />
-              <Message />
-            </ScrollToBottom>
-          <div className="chatBoxBottom">
-            <textarea
-              className="chatMessageInput"
-              placeholder="write somthing..."
-            ></textarea>
-            <button className="chatSubmitButton">Send</button>
-          </div>
-        </div>
-      </div>
+      <Switch>
+        <Route path="/conversations/:conversationId" children={ <ChatBox token={tokenState} userId={authState.user._id} setConId={handleSelectedConversation} setLastestSentMsg={handleLastestSentMsg}/>} />
+        <Route path="/conversations">
+          <h1>Open one conversation to chat</h1>
+        </Route>
+      </Switch>
       {/* Online */}
       <div className="chatOnline">
         <div className="chatOnlineWrapper">
           {
-            onlineUsers.map(user => <ChatOnline key={user._id} user={user} />)
+            onlineUsers.map(user => <ChatOnline key={user._id} user={user} token={tokenState} />)
           }
           
           
         </div>
       </div>
     </div>
+    </Router>
     
     
   )

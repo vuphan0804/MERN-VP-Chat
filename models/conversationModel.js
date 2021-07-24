@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
-const { DIRECT_MESSAGE, GROUP_MESSAGE } = require("../constants/conversation");
+const {
+  SELF_MESSAGE,
+  DIRECT_MESSAGE,
+  GROUP_MESSAGE,
+} = require("../constants/conversation");
 
 const conversationSchema = new mongoose.Schema(
   {
@@ -12,7 +16,7 @@ const conversationSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter conversation's type!"],
       trim: true,
-      enum: [DIRECT_MESSAGE, GROUP_MESSAGE],
+      enum: [SELF_MESSAGE, DIRECT_MESSAGE, GROUP_MESSAGE],
     },
   },
   {

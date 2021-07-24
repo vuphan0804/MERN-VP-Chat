@@ -5,7 +5,7 @@ const fullTextSearch = require("fulltextsearch");
 const userModel = require("../models/userModel");
 const conversationModel = require("../models/conversationModel");
 
-const { DIRECT_MESSAGE } = require("../constants/conversation");
+const { SELF_MESSAGE, DIRECT_MESSAGE } = require("../constants/conversation");
 
 const fullTextSearchVi = fullTextSearch.vi;
 
@@ -28,17 +28,12 @@ const conversationCtrl = {
       const { id: userId } = req.user;
       const { search } = req.query;
 
-      const conversations = await conversationModel.aggregate([
+      const directConversations = await conversationModel.aggregate([
         {
           $match: {
             members: {
               $in: [userId],
             },
-          },
-        },
-        {
-          $sort: {
-            updatedAt: -1,
           },
         },
         {
@@ -101,9 +96,58 @@ const conversationCtrl = {
             },
           },
         },
+        {
+          $sort: {
+            "_id.updatedAt": -1,
+          },
+        },
       ]);
 
-      const resData = conversations.map((con) => {
+      const selfConversations = await conversationModel.aggregate([
+        {
+          $match: {
+            type: SELF_MESSAGE,
+            members: { $in: [userId] },
+          },
+        },
+        {
+          $unwind: {
+            path: "$members",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            let: {
+              userId: "$members",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: [{ $toString: "$_id" }, "$$userId"],
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 1,
+                  name: 1,
+                  avatar: 1,
+                },
+              },
+            ],
+            as: "members",
+          },
+        },
+        {
+          $unwind: {
+            path: "$members",
+          },
+        },
+      ]);
+
+      let resData = directConversations.map((con) => {
         const copyCon = Object.assign(con);
         const { _id } = copyCon;
         const rest = _.omit(copyCon, "_id");
@@ -112,6 +156,8 @@ const conversationCtrl = {
           ...rest,
         };
       });
+      resData.push(selfConversations[0]);
+      resData = _.orderBy(resData, ["updatedAt"], ["desc"]);
 
       res.json({ conversations: resData });
     } catch (err) {
@@ -124,7 +170,8 @@ const conversationCtrl = {
       const { otherMembers, type } = req.body;
 
       // check exsit conversation
-      const members = [...otherMembers, userId].sort();
+      const members =
+        type === SELF_MESSAGE ? otherMembers : [...otherMembers, userId].sort();
       const matchedConversation = await conversationModel.aggregate([
         {
           $match: {
@@ -150,7 +197,7 @@ const conversationCtrl = {
       // new conversation:
       const newConversationData = {
         members,
-        type: DIRECT_MESSAGE,
+        type,
       };
       const newConversation = new conversationModel(newConversationData);
       const insertedNewConversation = await newConversation.save();

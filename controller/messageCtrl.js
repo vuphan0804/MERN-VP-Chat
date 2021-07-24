@@ -52,6 +52,11 @@ const messageCtrl = {
             as: "sender",
           },
         },
+        {
+          $unwind: {
+            path: "$sender",
+          },
+        },
       ]);
 
       res.json({ messages });
