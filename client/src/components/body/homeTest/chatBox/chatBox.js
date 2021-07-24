@@ -6,17 +6,24 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import Message from "../message/Message";
 
 import "./chatBox.scss";
-
-const BASE_API_URL = "http://localhost:8000";
+import { DIRECT_MESSAGE } from "../../../../constants/conversation";
 
 function ChatBox(props) {
   const { conversationId } = useParams();
-  const { token, userId, setConId, setLastestSentMsg } = props;
+  const {
+    token,
+    userId,
+    socket,
+    lastestReceivedMsg,
+    setConId,
+    setLastestSentMsg,
+  } = props;
   setConId(conversationId);
 
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");
   const [submitMessageText, setSubmitMessageText] = useState("");
+  const [partner, setPartner] = useState({ _id: userId }); // init is own user
 
   useEffect(() => {
     axios({
@@ -24,7 +31,7 @@ function ChatBox(props) {
       headers: {
         Authorization: token,
       },
-      url: `${BASE_API_URL}/api/conversations/${conversationId}/messages`,
+      url: `/api/conversations/${conversationId}/messages`,
     })
       .then((res) => {
         setMessages(res.data.messages);
@@ -32,7 +39,23 @@ function ChatBox(props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [conversationId, submitMessageText]);
+
+    axios({
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+      url: `/api/conversations/${conversationId}`,
+    })
+      .then((res) => {
+        const { members } = res.data.conversation;
+        if (res.data.conversation.type === DIRECT_MESSAGE)
+          setPartner(members.find((mem) => mem._id !== userId));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [conversationId, submitMessageText, lastestReceivedMsg]);
 
   const handleMessageTextOnchange = (e) => {
     setMessageText(e.target.value);
@@ -47,12 +70,16 @@ function ChatBox(props) {
       headers: {
         Authorization: token,
       },
-      url: `${BASE_API_URL}/api/conversations/${conversationId}/messages`,
+      url: `/api/conversations/${conversationId}/messages`,
     })
       .then((res) => {
-        setMessageText("");
         setSubmitMessageText(messageText);
         setLastestSentMsg(messageText);
+        socket.current.emit("new-message", {
+          receiverId: partner._id,
+          message: messageText,
+        });
+        setMessageText("");
       })
       .catch((err) => {
         console.log(err);
@@ -66,9 +93,9 @@ function ChatBox(props) {
           <ScrollToBottom className="chatBoxTop">
             {messages.map((msg) =>
               userId === msg.sender._id ? (
-                <Message own={true} message={msg} />
+                <Message key={msg._id} own={true} message={msg} />
               ) : (
-                <Message message={msg} />
+                <Message key={msg._id} message={msg} />
               )
             )}
           </ScrollToBottom>

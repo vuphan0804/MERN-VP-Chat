@@ -6,7 +6,6 @@ import {SELF_MESSAGE, DIRECT_MESSAGE} from '../../../../constants/conversation'
 
 import "./ChatOnline.scss";
 
-const BASE_API_URL = "http://localhost:8000"
 
 function ChatOnline(props) {
   const {userId, onlineUser, token, setSelectedOnlineUser} = props;
@@ -22,7 +21,7 @@ function ChatOnline(props) {
       headers: {
         Authorization: token,
       },
-      url: `${BASE_API_URL}/api/me/conversations`,
+      url: `/api/me/conversations`,
     })
       .then((res) => {
         const selectedOnlineUser = res.data.conversation;

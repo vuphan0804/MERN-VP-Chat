@@ -8,6 +8,9 @@ const path = require("path");
 const http = require("http");
 const morgan = require("morgan");
 
+const userModel = require("./models/userModel");
+const { nextTick } = require("process");
+
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
@@ -33,15 +36,53 @@ app.use("/api", require("./routes/conversationRoute"));
 app.use("/api", require("./routes/messageRoute"));
 
 // SocketIO:
+let socketUsers = [];
+
+const addSocketUser = async (userId, socketId) => {
+  !socketUsers.some((user) => user.userId === userId) &&
+    userId &&
+    socketId &&
+    socketUsers.push({
+      userId,
+      socketId,
+    });
+
+  await userModel.updateOne({ _id: userId }, { is_online: true });
+};
+
+const removeSocketUser = async (userId) => {
+  socketUsers = socketUsers.filter((user) => user.userId !== userId);
+
+  await userModel.updateOne({ _id: userId }, { is_online: false });
+};
+
+const findSocketIdByUserId = (userId) => {
+  const user = socketUsers.find((user) => user.userId === userId);
+
+  return user ? user.socketId : null;
+};
+
 io.on("connection", (socket) => {
-  // online state:
+  // connection:
   socket.on("user-connected", (data) => {
-    console.log("connect");
-    console.log(data);
+    addSocketUser(data.userId, socket.id);
+    io.emit("online-user", { users: socketUsers });
+    io.emit("new-online-user", { userId: data.userId });
   });
+
+  // send message:
+  socket.on("new-message", (data) => {
+    const { receiverId, message } = data;
+    const receiverSocketId = findSocketIdByUserId(receiverId);
+    if (receiverSocketId)
+      io.to(receiverSocketId).emit("new-message", { message });
+  });
+
+  // disconnection:
   socket.on("user-disconnected", (data) => {
-    console.log("disconnect");
-    console.log(data);
+    removeSocketUser(data.userId);
+    io.emit("online-user", { users: socketUsers });
+    io.emit("new-offline-user", { userId: data.userId });
   });
 });
 
