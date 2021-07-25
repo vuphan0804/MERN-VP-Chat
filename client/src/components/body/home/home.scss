@@ -1,71 +1,94 @@
-.messenger {
-    height: calc(100vh - 70px);
-    display: flex;
+@import '../../../index.scss';
+// Sidebar
+.ant-col-18 {
     background: white;
 }
-
-// Chat Menu
-.chatMenu {
-    flex: 3.5;
-    .chatMenuWrapper {
-
-        .chatMenuInput {
-            width: 90%;
-            padding: 10px 0;
-            border: none;
-            border-bottom: 1px solid gray;
-            margin-bottom: 20px;
-        }
-    }
+.sidebar {
+    background: $light-color;
+    color: black;
+    height: 100vh;
 }
-
-// Chat Box
-.chatBox {
-    flex: 5.5;
-}
-
-.chatBoxWrapper {
+// User Info
+.user-info {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    position: relative;
-    .chatBoxTop {
-        height: 100%;
-        overflow-y: scroll;
-        padding-right: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid $primary-color;
+    .user-name {
+        color: black;
+        margin-left: 5px;
     }
-    .chatBoxBottom {
-        margin-top: 5px;
+}
+// Room List
+.room-list {
+    .add-room {
+        color: white;
+        padding: 0;
+    }
+}
+// Chat Window
+.chat-window {
+    height: 100vh;
+    .header-chat {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        .chatMessageInput {
-            width: 80%;
-            height: 80px;
-            padding: 10px;
-            margin-bottom: 20px;
+        height: 57px;
+        padding: 0 16px;
+        align-items: center;
+        border-bottom: 1px solid $primary-color;
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .header-title {
+                margin: 0;
+                font-weight: bold;
+                .header-description {
+                    font-size: 12px;
+                }
+            }
         }
-        .chatSubmitButton {
-            width: 70px;
-            height: 40px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            color: white;
-            background-color: teal;
+        .btn-group {
+            display: flex;
+            align-items: center;
+        }
+    }
+    .content-chat {
+        height: calc(100% - 56px);
+        display: flex;
+        flex-direction: column;
+        padding: 11px;
+        justify-content: flex-end;
+        max-height: 100%;
+        overflow-y: auto;
+        .form-chat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 2px 2px 0;
+            border: 1px solid rgb(230, 230, 230);
+            border-radius: 2px;
+            .ant-form-item {
+                flex: 1;
+                margin-bottom: 0;
+            }
         }
     }
 }
+// Message
+.message-wrapper {
+    margin-bottom: 10px;
+    .message-author {
+        margin-left: 5px;
+        font-weight: bold;
 
-
-
-
-// Chat Online List
-.chatOnline {
-    flex: 3;
-}
-
-.chatMenuWrapper, .chatBoxWrapper, .chatOnlineWrapper {
-    padding: 10px;
-    height: 100%;
+    }
+    .message-date {
+        margin-left: 10px;
+        font-size: 11px;
+        color: #a7a7a7;
+    }
+    .message-content {
+        margin-left: 30px;
+    }
 }

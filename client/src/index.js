@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 // import * as serviceWorker from './serviceWorker';
 import DataProvider from './redux/store'
+import 'antd/dist/antd.css'
 
 ReactDOM.render(
   <React.StrictMode>

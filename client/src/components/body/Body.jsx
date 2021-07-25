@@ -23,9 +23,9 @@ function Body() {
   return (
     <section>
       <Switch>
-        <Route path={`/`} component={Home} exact />
-
+        <Route path={`/`} component={isLogged ? Home : Login} exact />
         <Route path={`/login`} component={isLogged ? NotFound : Login} exact />
+
         <Route
           path={`/register`}
           component={isLogged ? NotFound : Register}

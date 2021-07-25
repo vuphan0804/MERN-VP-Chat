@@ -1,5 +1,8 @@
-$base-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
-$primary-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
+// $base-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
+// $primary-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1) 50%, rgba(197,88,242,1) 96%);
+$primary-color: #0077c2;
+$second-color: #42a5f5;
+$light-color: #80d6ff;
 * {
     padding: 0;
     box-sizing: border-box;
@@ -16,14 +19,14 @@ $primary-color: linear-gradient(48deg, rgba(96,225,249,1) 3%, rgba(80,106,199,1)
       monospace;
   }
   .App{
-    max-width: 1200px;
+    max-width: auto;
     width: 100%;
     min-height: 100vh;
     box-shadow: 0 0 20px #eee;
     margin: 0 auto;
     overflow: hidden;
     background: $primary-color;
-    background: $base-color;
+    background: $second-color;
   }
   a{
     text-decoration: none;

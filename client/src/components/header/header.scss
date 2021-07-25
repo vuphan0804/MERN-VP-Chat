@@ -3,7 +3,7 @@
 header {
     width: 100%;
     min-height: 100px;
-    background: $base-color;
+    // background: $second-color;
     background: $primary-color;
     display: flex;
     justify-content: space-between;
@@ -39,24 +39,26 @@ header {
 }
 
 // Dropdown
-.drop-nav {
+.nav-avatar {
     position: relative;
     padding: 10px 0;
     a {
         text-transform: capitalize; 
         overflow: hidden;
     }
-    .dropdown {
+    .dropdown-avatar {
+        z-index: 99 !important;
         position: absolute;
-        background: #282c34;
+        background: $primary-color;
         width: 100%;
         width: calc(100% + 30px);
-        top: 50px;
+        top: 70px;
         display: none;
     }
     &:hover {
-        .dropdown {
+        .dropdown-avatar {
             display: block;
+            z-index: 99;
         }
     }
 }

@@ -15,9 +15,12 @@ app.use(fileUpload({
     useTempFiles: true
 }))
 
+
+
 // Routes
 app.use('/user', require('./routes/userRoute'))
 app.use('/api', require('./routes/upload'))
+
 
 
 // Connect to mongodb

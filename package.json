@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/vuphan0804/MERN-Authentication#readme",
   "dependencies": {
+    "antd": "^4.16.7",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.25.2",
     "cookie-parser": "^1.4.5",
