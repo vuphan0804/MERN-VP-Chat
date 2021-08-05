@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ScrollToBottom from "react-scroll-to-bottom";
+// import ScrollToBottom from "react-scroll-to-bottom";
 
 import Message from "../message/Message";
 
@@ -25,6 +25,7 @@ function ChatBox(props) {
   const [submitMessageText, setSubmitMessageText] = useState("");
   const [partner, setPartner] = useState({ _id: userId }); // init is own user
 
+  // const scrollRef = useRef();
   useEffect(() => {
     axios({
       method: "GET",
@@ -88,33 +89,50 @@ function ChatBox(props) {
 
   return (
     <div className="chatBox">
-      {
-        <div className="chatBoxWrapper">
-          <ScrollToBottom className="chatBoxTop">
-            {messages.map((msg) =>
+      <div className="chatBoxWrapper">
+        <div className="callVideo">
+          <div className="callVideoUser">
+            <img
+              className="callVideoAvatar"
+              src="https://res.cloudinary.com/vuphan0804/image/upload/v1624267262/avatar/baby_d8gjis.jpg"
+              alt=""
+            />
+            <span className="callVideoName">Tien BEDE</span>
+          </div>
+
+          <div className="callVideoIcon">
+            <i class="fa fa-phone" aria-hidden="true"></i>
+            <i class="fa fa-video-camera" aria-hidden="true"></i>
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div className="chatBoxTop">
+          {/* <div ref={scrollRef}> */}
+          {messages.map(
+            (msg) =>
               userId === msg.sender._id ? (
                 <Message key={msg._id} own={true} message={msg} />
               ) : (
                 <Message key={msg._id} message={msg} />
               )
-            )}
-          </ScrollToBottom>
-          <div className="chatBoxBottom">
-            <textarea
-              className="chatMessageInput"
-              placeholder="write somthing..."
-              value={messageText}
-              onChange={handleMessageTextOnchange}
-            ></textarea>
-            <button
-              className="chatSubmitButton"
-              onClick={handleMessageTextOnSubmit}
-            >
-              Send
-            </button>
-          </div>
+            // </div>
+          )}
         </div>
-      }
+        <div className="chatBoxBottom">
+          <textarea
+            className="chatMessageInput"
+            placeholder="write somthing..."
+            value={messageText}
+            onChange={handleMessageTextOnchange}
+          ></textarea>
+          <button
+            className="chatSubmitButton"
+            onClick={handleMessageTextOnSubmit}
+          >
+            Send
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

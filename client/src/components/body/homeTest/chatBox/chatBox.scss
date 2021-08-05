@@ -1,3 +1,4 @@
+@import "../../../../index.scss";
 // Chat Box
 .chatBox {
   flex: 5.5;
@@ -20,9 +21,11 @@
     justify-content: space-between;
     .chatMessageInput {
       width: 80%;
-      height: 80px;
+      height: 50px;
       padding: 10px;
       margin-bottom: 20px;
+      border-radius: 30px;
+      background: rgba($color: $border-color, $alpha: 0.1);
     }
     .chatSubmitButton {
       width: 70px;
@@ -32,6 +35,37 @@
       cursor: pointer;
       color: white;
       background-color: teal;
+    }
+  }
+}
+// Call Video
+.callVideo {
+  padding: 10px 0;
+  border-bottom: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+  color: $primary-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .callVideoUser {
+    display: flex;
+    align-items: center;
+    .callVideoAvatar {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      display: flex;
+      object-fit: cover;
+    }
+    .callVideoName {
+      font-weight: 500;
+      color: black;
+      padding: 10px;
+    }
+  }
+  .callVideoIcon {
+    i {
+      padding: 10px;
     }
   }
 }

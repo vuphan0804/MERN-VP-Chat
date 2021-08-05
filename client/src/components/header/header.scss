@@ -48,10 +48,10 @@ header {
     }
     .dropdown {
         position: absolute;
-        background: #282c34;
+        background: $primary-color;
         width: 100%;
         width: calc(100% + 30px);
-        top: 50px;
+        top: 70px;
         display: none;
     }
     &:hover {
