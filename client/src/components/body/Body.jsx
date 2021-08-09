@@ -15,25 +15,35 @@ import Profile from "../body/profile/Profile";
 import EditUser from "../body/profile/EditUser";
 
 import Home from "../body/home/Home";
-import HomeTest from "../body/homeTest/Home";
+import HomeTest from "../body/homeTest2/Home";
 
 import "./body.scss";
 
 function Body() {
   const auth = useSelector((state) => state.auth);
-  const { isLogged, isAdmin } = auth;
+  
+  const [isLogged, setIsLogged] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  // const { isLogged, isAdmin } = auth;
+
+  useEffect(() => {
+    setIsLogged(auth.isLogged);
+    setIsAdmin(auth.isAdmin);
+  }, [auth])
 
   return (
     <section>
       <Switch>
         <Route path={`/`} component={Home} exact />
 
-        <Route path={`/conversations`} >
-          {isLogged ? <HomeTest /> : <Login/>}
+        {/* <Route path={`/conversations`} component={isLogged ? HomeTest : Login}/> */}
+        
+        <Route path={`/conversations`} > {/* sida way */}
+          {localStorage.getItem('firstLogin') ? <HomeTest/> : <Login/>} 
         </Route>
-
-
+          
         <Route path={`/login`} component={isLogged ? NotFound : Login} exact />
+
         <Route
           path={`/register`}
           component={isLogged ? NotFound : Register}
@@ -45,6 +55,7 @@ function Body() {
           component={isLogged ? NotFound : ForgotPass}
           exact
         />
+
         <Route
           path={`/user/reset/:token`}
           component={isLogged ? NotFound : ResetPass}

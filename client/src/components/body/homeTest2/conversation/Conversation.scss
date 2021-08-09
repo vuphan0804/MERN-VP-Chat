@@ -1,0 +1,40 @@
+.conversation {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  color: black;
+  &:hover {
+    background-color: rgb(238, 238, 238);
+  }
+  .conversationImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 10px;
+    object-fit: cover;
+  }
+  .conversationName {
+    font-weight: 500;
+  }
+}
+
+.selectedConversation {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #e9f3ff;
+  color: black;
+
+  .conversationImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 10px;
+    object-fit: cover;
+  }
+  .conversationName {
+    font-weight: 500;
+  }
+}

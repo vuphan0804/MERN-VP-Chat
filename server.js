@@ -48,26 +48,45 @@ const addSocketUser = async (userId, socketId) => {
     });
 
   await userModel.updateOne({ _id: userId }, { is_online: true });
+  // console.log(socketUsers);
 };
 
-const removeSocketUser = async (userId) => {
-  socketUsers = socketUsers.filter((user) => user.userId !== userId);
+const removeSocketUserBySocketId = async (socketId) => {
+  const user = socketUsers.find((user) => user.socketId === socketId);
+  user &&
+    (await userModel.updateOne({ _id: user.userId }, { is_online: false }));
 
-  await userModel.updateOne({ _id: userId }, { is_online: false });
+  socketUsers = socketUsers.filter((user) => user.socketId !== socketId);
+  // console.log(socketUsers);
 };
 
 const findSocketIdByUserId = (userId) => {
   const user = socketUsers.find((user) => user.userId === userId);
+  return user ? user.socketId : null;
+};
 
+const findUserIdBySocketId = (socketId) => {
+  const user = socketUsers.find((user) => user.socketId === socketId);
   return user ? user.socketId : null;
 };
 
 io.on("connection", (socket) => {
   // connection:
   socket.on("user-connected", (data) => {
+    // console.log("user-connected", socket.id, data);
     addSocketUser(data.userId, socket.id);
     io.emit("online-user", { users: socketUsers });
     io.emit("new-online-user", { userId: data.userId });
+    io.emit("new-online-socket", socket.id);
+  });
+
+  // disconnection:
+  socket.on("disconnect", () => {
+    // console.log("disconnect", socket.id);
+    removeSocketUserBySocketId(socket.id);
+    io.emit("online-user", { users: socketUsers });
+    io.emit("new-offline-user", { userId: findUserIdBySocketId(socket.id) });
+    io.emit("new-offline-socket", socket.id);
   });
 
   // send message:
@@ -78,11 +97,36 @@ io.on("connection", (socket) => {
       io.to(receiverSocketId).emit("new-message", { message });
   });
 
-  // disconnection:
-  socket.on("user-disconnected", (data) => {
-    removeSocketUser(data.userId);
-    io.emit("online-user", { users: socketUsers });
-    io.emit("new-offline-user", { userId: data.userId });
+  // calling:
+  socket.on("call-user", (data) => {
+    const receivingSocketId = findSocketIdByUserId(data.userToCall);
+    if (receivingSocketId) {
+      io.to(receivingSocketId).emit("call-user", {
+        from: data.from,
+        userId: data.userId,
+        name: data.name,
+        avatar: data.avatar,
+        callType: data.callType,
+        signalData: data.signalData,
+      });
+    }
+  });
+
+  // ending call:
+  socket.on("end-call", (data) => {
+    if (data.partner) {
+      const socketId = findSocketIdByUserId(data.partner);
+      socketId && io.to(socketId).emit("end-call");
+    }
+  });
+
+  // accepting call:
+  socket.on("call-accepted", (data) => {
+    console.log("call-accepted");
+    if (data.to) {
+      const socketId = findSocketIdByUserId(data.to);
+      socketId && io.to(socketId).emit("call-accepted", data);
+    }
   });
 });
 
