@@ -1,0 +1,41 @@
+@import "../../../../../index.scss";
+// Chat Box
+.chatBox {
+  flex: 5.5;
+}
+
+// Call Video
+.callVideo {
+  padding: 10px 0;
+  border-bottom: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+  color: $primary-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .callVideoUser {
+    display: flex;
+    align-items: center;
+    .callVideoAvatar {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      display: flex;
+      object-fit: cover;
+    }
+    .callVideoName {
+      font-weight: 500;
+      color: black;
+      padding: 10px;
+    }
+  }
+  .callVideoIcon {
+    button {
+      background-color: inherit;
+      i {
+        padding: 10px;
+        color: $primary-color;
+      }
+    }
+  }
+}

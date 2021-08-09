@@ -14,8 +14,8 @@ import ResetPass from "../body/auth/ResetPassword";
 import Profile from "../body/profile/Profile";
 import EditUser from "../body/profile/EditUser";
 
-import Home from "../body/home/Home";
-import HomeTest from "../body/homeTest2/Home";
+import ChatHome from "./chatHome/chatHome";
+import Home from "./home/Home";
 
 import "./body.scss";
 
@@ -39,7 +39,7 @@ function Body() {
         {/* <Route path={`/conversations`} component={isLogged ? HomeTest : Login}/> */}
         
         <Route path={`/conversations`} > {/* sida way */}
-          {localStorage.getItem('firstLogin') ? <HomeTest/> : <Login/>} 
+          {localStorage.getItem('firstLogin') ? <ChatHome/> : <Login/>} 
         </Route>
           
         <Route path={`/login`} component={isLogged ? NotFound : Login} exact />

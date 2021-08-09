@@ -1,56 +1,9 @@
-import React from "react";
-import Conversation from "./conversation/Conversation";
-import Message from "./message/Message";
-import ChatOnline from "./chatOnline/ChatOnline";
+import React from 'react';
 
-import "./home.scss";
-
-function Home() {
-  return (
-    // <div className="messenger">
-    //   {/* Menu */}
-    //   <div className="chatMenu">
-    //     <div className="chatMenuWrapper">
-    //       <input placeholder="Search for friends" className="chatMenuInput" />
-    //       <Conversation />
-    //       <Conversation />
-    //       <Conversation />
-    //       <Conversation />
-    //     </div>
-    //   </div>
-    //   {/* ChatBox */}
-    //   <div className="chatBox">
-    //     <div className="chatBoxWrapper">
-    //       <div className="chatBoxTop">
-    //         <Message />
-    //         <Message own={true} />
-    //         <Message />
-    //         <Message />
-    //         <Message />
-    //         <Message />
-    //         <Message />
-    //         <Message />
-    //       </div>
-    //       <div className="chatBoxBottom">
-    //         <textarea
-    //           className="chatMessageInput"
-    //           placeholder="write somthing..."
-    //         ></textarea>
-    //         <button className="chatSubmitButton">Send</button>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   {/* Online */}
-    //   <div className="chatOnline">
-    //     <div className="chatOnlineWrapper">
-    //       <ChatOnline />
-    //       <ChatOnline />
-    //       <ChatOnline />
-    //     </div>
-    //   </div>
-    // </div>
-    <h1>Wellcome tu mai chat platform, hey yo bro</h1>
-  );
+const Home = () => {
+  return(
+    <h1>agfbijebflnelkfnmlemlkfmne;lf</h1>
+  )
 }
 
 export default Home;
