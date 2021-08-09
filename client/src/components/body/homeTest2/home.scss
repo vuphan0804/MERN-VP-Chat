@@ -1,0 +1,58 @@
+.messenger {
+  height: calc(100vh - 70px);
+  display: flex;
+  background: white;
+}
+
+// Chat Menu
+.chatMenu {
+  flex: 3.5;
+  .chatMenuWrapper {
+    .chatMenuInput {
+      width: 90%;
+      padding: 10px 0;
+      border: none;
+      border-bottom: 1px solid gray;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+// Chat Online List
+.chatOnline {
+  flex: 3;
+}
+
+.chatMenuWrapper,
+.chatBoxWrapper,
+.chatOnlineWrapper {
+  padding: 10px;
+  height: 100%;
+}
+
+// Call Model
+.callModelWrapper {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: rgba(128, 128, 128, 0.541);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.peerWrapper {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: rgba(128, 128, 128, 0.541);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
