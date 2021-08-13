@@ -49,7 +49,7 @@ function Home() {
 
   useEffect(() => {
     console.log('alo')
-    socket.current = io('http://localhost:8000');
+    socket.current = io('https://vp-chat.herokuapp.com');
 
     // component unmounted:
     return (() => {
