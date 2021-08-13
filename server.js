@@ -15,7 +15,10 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://vp-chat.herokuapp.com"
+        : "http://localhost:3000",
   },
 });
 
