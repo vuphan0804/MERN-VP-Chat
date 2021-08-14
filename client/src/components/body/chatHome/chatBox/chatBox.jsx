@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import ScrollToBottom from "react-scroll-to-bottom";
 
 import Message from "./message/Message";
 import ActionBar from './actionBar/actionBar'
@@ -23,12 +22,16 @@ function ChatBox(props) {
   } = props;
   setConId(conversationId);
 
-  console.log(token);
+  const messagesEndRef = useRef(null);
 
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");
   const [submitMessageText, setSubmitMessageText] = useState("");
   const [partner, setPartner] = useState({ _id: userId }); // init is own user
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   useEffect(() => {
     axios({
@@ -60,6 +63,8 @@ function ChatBox(props) {
       .catch((err) => {
         console.log(err);
       });
+
+    scrollToBottom()
   }, [token, conversationId, submitMessageText, lastestReceivedMsg]);
 
   const handleMessageTextOnchange = (e) => {
@@ -96,7 +101,7 @@ function ChatBox(props) {
       {
         <div className="chatBoxWrapper">
           <ActionBar partner={partner} handleAudioCalling={handleAudioCalling} handleVideoCalling={handleVideoCalling} />
-          <ScrollToBottom className="chatBoxTop">
+          <div className="chatBoxTop">
             {messages.map((msg) =>
               userId === msg.sender._id ? (
                 <Message key={msg._id} own={true} message={msg} />
@@ -104,7 +109,8 @@ function ChatBox(props) {
                 <Message key={msg._id} message={msg} />
               )
             )}
-          </ScrollToBottom>
+             <div ref={messagesEndRef} />
+          </div>
           <div className="chatBoxBottom">
             <textarea
               className="chatMessageInput"
