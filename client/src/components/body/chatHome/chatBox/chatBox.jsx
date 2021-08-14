@@ -33,10 +33,13 @@ function ChatBox(props) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
+<<<<<<< HEAD
   useEffect(() => {
     scrollToBottom();
   }, [])
 
+=======
+>>>>>>> 72542cfbe82bbbae7a1536f13c722e9962309e3d
   useEffect(() => {
     axios({
       method: "GET",
