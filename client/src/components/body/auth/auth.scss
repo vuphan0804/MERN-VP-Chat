@@ -1,4 +1,4 @@
-@import '../../../index.scss';
+@import "../../../index.scss";
 
 .login_page {
     max-width: 500px;
@@ -27,7 +27,7 @@
         a {
             color: crimson;
         }
-        
+
         button {
             width: 150px;
             padding: 10px 0;
@@ -46,7 +46,6 @@
         color: #111;
         font-weight: 600;
     }
-    
 }
 
 // Forgot Password
@@ -82,7 +81,6 @@
             margin-top: 15px;
         }
     }
-
 }
 
 // Facebook / Google
@@ -110,11 +108,12 @@
     background: rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     box-shadow: -30px 30px 20px rgba($color: #1d1c1c, $alpha: 0.3);
-    animation: animate 5s ease-in-out infinite;
-    animation-delay: -2.5s;
+    // animation: animate 5s ease-in-out infinite;
+    // animation-delay: -2.5s;
 }
 @keyframes animate {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(10px);
     }
     50% {

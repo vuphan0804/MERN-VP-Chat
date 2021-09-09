@@ -1,4 +1,4 @@
-@import '../../index.scss';
+@import "../../index.scss";
 
 header {
     width: 100%;
@@ -33,17 +33,16 @@ header {
                 border-radius: 50%;
             }
         }
-        
     }
-
 }
 
 // Dropdown
 .drop-nav {
     position: relative;
     padding: 10px 0;
+    z-index: 99;
     a {
-        text-transform: capitalize; 
+        text-transform: capitalize;
         overflow: hidden;
     }
     .dropdown {
