@@ -11,9 +11,16 @@ const messageSchema = new mongoose.Schema(
       required: [true, "Please enter message's sender!"],
       trim: true,
     },
+    type: {
+      type: String,
+      trim: true,
+    },
     text: {
       type: String,
-      required: [true, "Please enter message's content!"],
+      trim: true,
+    },
+    path: {
+      type: String,
       trim: true,
     },
   },

@@ -5,6 +5,8 @@ const userModel = require("../models/userModel");
 const conversationModel = require("../models/conversationModel");
 const messageModel = require("../models/messageModel");
 
+const { FILE, TEXT } = require("../constants/message");
+
 const messageCtrl = {
   getAllMessageInAConversation: async (req, res) => {
     try {
@@ -68,7 +70,7 @@ const messageCtrl = {
     try {
       const { conversationId } = req.params;
       const { id: userId } = req.user;
-      const { text } = req.body;
+      const { text, type, path } = req.body;
 
       // check conversation:
       try {
@@ -81,19 +83,37 @@ const messageCtrl = {
         return res.status(400).json({ msg: "Conversation does not exsit" });
 
       // create message:
-      const newMsgData = {
-        conversationId,
-        sender: userId,
-        text,
-      };
-      const newMsg = new messageModel(newMsgData);
-      await newMsg.save();
-      await conversationModel.updateOne(
-        { _id: mongoose.Types.ObjectId(conversationId) },
-        { updateAt: Date.now().toString() }
-      );
+      if (type === TEXT) {
+        const newMsgData = {
+          conversationId,
+          sender: userId,
+          type,
+          text,
+        };
+        const newMsg = new messageModel(newMsgData);
+        await newMsg.save();
+        await conversationModel.updateOne(
+          { _id: mongoose.Types.ObjectId(conversationId) },
+          { updateAt: Date.now().toString() }
+        );
 
-      res.status(201).json({ msg: "Create message successfully" });
+        res.status(201).json({ msg: "Create message successfully" });
+      } else if (type === FILE) {
+        const newMsgData = {
+          conversationId,
+          sender: userId,
+          type,
+          path,
+        };
+        const newMsg = new messageModel(newMsgData);
+        await newMsg.save();
+        await conversationModel.updateOne(
+          { _id: mongoose.Types.ObjectId(conversationId) },
+          { updateAt: Date.now().toString() }
+        );
+
+        res.status(201).json({ msg: "Create message successfully" });
+      }
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }

@@ -20,7 +20,6 @@ const conversationSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: [true, "Please enter conversation's name!"],
       trim: true,
     },
   },

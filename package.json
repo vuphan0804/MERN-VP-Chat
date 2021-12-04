@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/vuphan0804/MERN-Authentication#readme",
   "dependencies": {
+    "@mui/icons-material": "^5.2.0",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.25.2",
     "cookie-parser": "^1.4.5",

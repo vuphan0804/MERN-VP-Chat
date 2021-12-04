@@ -1,17 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import FileViewer from "react-file-viewer";
 
 import Message from "./message/Message";
 import ActionBar from "./actionBar/actionBar";
 
 import "./chatBox.scss";
+
+import UploadFilePopup from "./uploadFilePopup/uploadFilePopup";
+
 import {
   DEFAULT_GROUP_AVATAR,
   DEFAULT_GROUP_NAME,
   DIRECT_MESSAGE,
   GROUP_MESSAGE,
 } from "../../../../constants/conversation";
+import { TEXT, FILE } from "../../../../constants/message";
 
 function ChatBox(props) {
   const { conversationId } = useParams();
@@ -34,6 +39,7 @@ function ChatBox(props) {
   const [submitMessageText, setSubmitMessageText] = useState("");
   const [partner, setPartner] = useState({ _id: userId }); // init is own user
   const [conversation, setConversation] = useState({}); // init is own user
+  const [openUploadPopup, setOpenUploadPopup] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -91,6 +97,7 @@ function ChatBox(props) {
     axios({
       method: "POST",
       data: {
+        type: TEXT,
         text: messageText,
       },
       headers: {
@@ -127,40 +134,56 @@ function ChatBox(props) {
 
   return (
     <div className="chatBox">
-      {
-        <div className="chatBoxWrapper">
-          <ActionBar
-            partner={partner}
-            handleAudioCalling={handleAudioCalling}
-            handleVideoCalling={handleVideoCalling}
-          />
-          <div className="chatBoxTop">
-            {messages.map((msg) =>
-              userId === msg.sender._id ? (
-                <Message key={msg._id} own={true} message={msg} />
-              ) : (
-                <Message key={msg._id} message={msg} />
-              )
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="chatBoxBottom">
-            <textarea
-              className="chatMessageInput"
-              placeholder="write somthing..."
-              value={messageText}
-              onChange={handleMessageTextOnchange}
-              wra
-            ></textarea>
-            <button
-              className="chatSubmitButton"
-              onClick={handleMessageTextOnSubmit}
-            >
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
+      <div className="chatBoxWrapper">
+        <ActionBar
+          partner={partner}
+          handleAudioCalling={handleAudioCalling}
+          handleVideoCalling={handleVideoCalling}
+        />
+        <div className="chatBoxTop">
+          {messages.map((msg) =>
+            userId === msg.sender._id ? (
+              <Message own={true} key={msg._id} message={msg} />
+            ) : (
+              <Message key={msg._id} message={msg} />
+            )
+          )}
+          <div ref={messagesEndRef} />
         </div>
-      }
+        <div className="chatBoxBottom">
+          <textarea
+            className="chatMessageInput"
+            placeholder="write somthing..."
+            value={messageText}
+            onChange={handleMessageTextOnchange}
+            wra
+          ></textarea>
+          <button
+            className="chatSubmitButton"
+            onClick={() => setOpenUploadPopup(true)}
+          >
+            <i class="fas fa-paperclip"></i>
+          </button>
+          <button
+            className="chatSubmitButton"
+            onClick={handleMessageTextOnSubmit}
+          >
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+      <UploadFilePopup
+        id="ringtone-menu"
+        keepMounted
+        token={token}
+        socket={socket}
+        conversation={conversation}
+        setLastestSentMsg={setLastestSentMsg}
+        open={openUploadPopup}
+        setOpen={setOpenUploadPopup}
+        partner={partner}
+        userId={userId}
+      />
     </div>
   );
 }
