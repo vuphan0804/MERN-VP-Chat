@@ -6,7 +6,12 @@ import Message from "./message/Message";
 import ActionBar from "./actionBar/actionBar";
 
 import "./chatBox.scss";
-import { DIRECT_MESSAGE } from "../../../../constants/conversation";
+import {
+  DEFAULT_GROUP_AVATAR,
+  DEFAULT_GROUP_NAME,
+  DIRECT_MESSAGE,
+  GROUP_MESSAGE,
+} from "../../../../constants/conversation";
 
 function ChatBox(props) {
   const { conversationId } = useParams();
@@ -63,6 +68,11 @@ function ChatBox(props) {
         const { members } = res.data.conversation;
         if (res.data.conversation.type === DIRECT_MESSAGE)
           setPartner(members.find((mem) => mem._id !== userId));
+        else if (res.data.conversation.type === GROUP_MESSAGE)
+          setPartner({
+            name: DEFAULT_GROUP_NAME,
+            avatar: DEFAULT_GROUP_AVATAR,
+          });
       })
       .catch((err) => {
         console.log(err);

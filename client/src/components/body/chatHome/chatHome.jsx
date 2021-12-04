@@ -10,6 +10,7 @@ import ChatOnline from "./chatOnline/ChatOnline";
 import ChatBox from "./chatBox/chatBox";
 import CallModel from "./callModel/callModel";
 import StreamVideo from "./stream/stream";
+import NewGroupPopup from "./newGroupPopup/newGroupPopup";
 
 import "./chatHome.scss";
 
@@ -35,12 +36,15 @@ function Home() {
   const [calleeUser, setCalleeUser] = useState({});
   const [callerUser, setCallerUser] = useState({});
   const [callerSignal, setCallerSignal] = useState("");
+  const [isOpenNewGrPopup, setIsOpenNewGrPopup] = useState(false);
+  const [allUsers, setAllUsers] = useState([]);
 
   const socket = useRef();
   const myStream = useRef();
   const partnerStream = useRef();
   const peerRef = useRef();
 
+  // didmounted
   useEffect(() => {
     console.log("alo");
     socket.current = io("https://vp-chat.herokuapp.com");
@@ -52,6 +56,7 @@ function Home() {
     };
   }, []);
 
+  // update
   useEffect(() => {
     // first connection:
     auth.user._id &&
@@ -135,6 +140,7 @@ function Home() {
     };
   }, [auth]);
 
+  // update
   useEffect(() => {
     console.log("reload");
 
@@ -167,6 +173,21 @@ function Home() {
         .catch((err) => {
           console.log(err);
         });
+
+    token &&
+      axios({
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+        url: `/user/others/only_name`,
+      })
+        .then((res) => {
+          setAllUsers(res.data.users);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }, [
     auth,
     token,
@@ -195,6 +216,10 @@ function Home() {
 
   const handleSelectedOnlineUser = (user) => {
     setSelectedOnlineUser(user);
+  };
+
+  const handleNewGroupDisplay = () => {
+    setIsOpenNewGrPopup(true);
   };
 
   const handleAudioCalling = (callee) => {
@@ -386,6 +411,15 @@ function Home() {
 
   return (
     <Router>
+      {/* New Group Popup */}
+      <NewGroupPopup
+        id="ringtone-menu"
+        keepMounted
+        open={isOpenNewGrPopup}
+        setOpen={setIsOpenNewGrPopup}
+        allUsers={allUsers}
+        token={token}
+      />
       {/* Calling Popup */}
       {isCalling && (
         <div className="callModelWrapper">
@@ -424,6 +458,9 @@ function Home() {
         {/* Menu */}
         <div className="chatMenu">
           <div className="chatMenuWrapper">
+            <button className="newGroupBtn" onClick={handleNewGroupDisplay}>
+              New group
+            </button>
             <form onSubmit={handleSearchSubmit}>
               <input
                 placeholder="Search for friends"
