@@ -9,7 +9,7 @@ const {
 const conversationSchema = new mongoose.Schema(
   {
     members: {
-      type: Array,
+      type: [String],
       required: [true, "Please enter conversation's members!"],
     },
     type: {
@@ -17,6 +17,11 @@ const conversationSchema = new mongoose.Schema(
       required: [true, "Please enter conversation's type!"],
       trim: true,
       enum: [SELF_MESSAGE, DIRECT_MESSAGE, GROUP_MESSAGE],
+    },
+    name: {
+      type: String,
+      required: [true, "Please enter conversation's name!"],
+      trim: true,
     },
   },
   {

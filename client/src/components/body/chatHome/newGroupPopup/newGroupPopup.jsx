@@ -8,14 +8,17 @@ import {
   Dialog,
   FormControlLabel,
   Button,
+  TextField,
 } from "@mui/material";
 import { GROUP_MESSAGE } from "../../../../constants/conversation";
 const axios = require("axios");
 
-function ConfirmationDialogRaw(props) {
-  const { open, setOpen, allUsers, token } = props;
+function NewGroupConversation(props) {
+  const { open, setOpen, allUsers, token, setLastestGroupCreated, socket } =
+    props;
 
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [groupName, setGroupName] = useState("");
 
   const handleCancel = () => {
     setOpen(false);
@@ -31,12 +34,18 @@ function ConfirmationDialogRaw(props) {
         data: {
           otherMembers: selectedUsers,
           type: GROUP_MESSAGE,
+          name: groupName,
         },
         url: "/api/me/conversations",
       })
         .then((res) => {
-          console.log(res.data);
+          setGroupName("");
           setOpen(false);
+          setLastestGroupCreated(res.data.conversation._id);
+          socket.current.emit("new-group-conversation", {
+            groupMembers: res.data.conversation.members,
+            conversationId: res.data.conversation._id,
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -60,6 +69,16 @@ function ConfirmationDialogRaw(props) {
     >
       <DialogTitle>Select Group Members</DialogTitle>
       <DialogContent dividers>
+        <TextField
+          style={{ marginBottom: "10px" }}
+          label="Group name"
+          variant="standard"
+          value={groupName}
+          onChange={(e) => {
+            setGroupName(e.target.value);
+          }}
+          required
+        />
         <FormGroup>
           {allUsers.map((user, index) => (
             <FormControlLabel
@@ -80,4 +99,4 @@ function ConfirmationDialogRaw(props) {
   );
 }
 
-export default ConfirmationDialogRaw;
+export default NewGroupConversation;

@@ -97,6 +97,15 @@ io.on("connection", (socket) => {
       io.to(receiverSocketId).emit("new-message", { message });
   });
 
+  // new group conversation:
+  socket.on("new-group-conversation", (data) => {
+    const { groupMembers, conversationId } = data;
+    groupMembers.map((userId) => {
+      const userSocketId = findSocketIdByUserId(userId);
+      io.to(userSocketId).emit("new-group-conversation", { conversationId });
+    });
+  });
+
   // calling:
   socket.on("call-user", (data) => {
     const receivingSocketId = findSocketIdByUserId(data.userToCall);
@@ -122,7 +131,7 @@ io.on("connection", (socket) => {
 
   // accepting call:
   socket.on("call-accepted", (data) => {
-    console.log("call-accepted");
+    // console.log("call-accepted");
     if (data.to) {
       const socketId = findSocketIdByUserId(data.to);
       socketId && io.to(socketId).emit("call-accepted", data);

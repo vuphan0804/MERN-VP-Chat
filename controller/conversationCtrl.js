@@ -5,7 +5,11 @@ const fullTextSearch = require("fulltextsearch");
 const userModel = require("../models/userModel");
 const conversationModel = require("../models/conversationModel");
 
-const { SELF_MESSAGE, DIRECT_MESSAGE } = require("../constants/conversation");
+const {
+  SELF_MESSAGE,
+  DIRECT_MESSAGE,
+  GROUP_MESSAGE,
+} = require("../constants/conversation");
 
 const fullTextSearchVi = fullTextSearch.vi;
 
@@ -76,6 +80,7 @@ const conversationCtrl = {
             _id: {
               _id: "$_id",
               type: "$type",
+              name: "$name",
               createdAt: "$createdAt",
               updatedAt: "$updatedAt",
             },
@@ -178,7 +183,7 @@ const conversationCtrl = {
   createMyConversation: async (req, res) => {
     try {
       const { id: userId } = req.user;
-      const { otherMembers, type } = req.body;
+      const { otherMembers, type, name } = req.body;
 
       // check exsit conversation
       const members =
@@ -206,9 +211,11 @@ const conversationCtrl = {
         return res.status(200).json({ conversation: resConversation });
 
       // new conversation:
+      let countGroupConversation = null;
       const newConversationData = {
         members,
         type,
+        name: name || undefined,
       };
       const newConversation = new conversationModel(newConversationData);
       const insertedNewConversation = await newConversation.save();
@@ -273,6 +280,7 @@ const conversationCtrl = {
             _id: {
               _id: "$_id",
               type: "$type",
+              name: "$name",
               createdAt: "$createdAt",
               updateAt: "$updateAt",
             },

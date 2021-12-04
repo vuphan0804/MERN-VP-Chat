@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
     //   next();
     // });
 
-    var decoded = jwt.decode(token);
+    const decoded = jwt.decode(token);
     req.user = decoded;
     next();
   } catch (err) {

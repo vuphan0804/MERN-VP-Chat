@@ -33,6 +33,7 @@ function ChatBox(props) {
   const [messageText, setMessageText] = useState("");
   const [submitMessageText, setSubmitMessageText] = useState("");
   const [partner, setPartner] = useState({ _id: userId }); // init is own user
+  const [conversation, setConversation] = useState({}); // init is own user
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,12 +66,13 @@ function ChatBox(props) {
       url: `/api/conversations/${conversationId}`,
     })
       .then((res) => {
+        setConversation(res.data.conversation);
         const { members } = res.data.conversation;
         if (res.data.conversation.type === DIRECT_MESSAGE)
           setPartner(members.find((mem) => mem._id !== userId));
         else if (res.data.conversation.type === GROUP_MESSAGE)
           setPartner({
-            name: DEFAULT_GROUP_NAME,
+            name: res.data.conversation.name,
             avatar: DEFAULT_GROUP_AVATAR,
           });
       })
@@ -99,10 +101,23 @@ function ChatBox(props) {
       .then((res) => {
         setSubmitMessageText(messageText);
         setLastestSentMsg(messageText);
-        socket.current.emit("new-message", {
-          receiverId: partner._id,
-          message: messageText,
-        });
+        if (conversation.type === DIRECT_MESSAGE)
+          socket.current.emit("new-message", {
+            receiverId: partner._id,
+            message: messageText,
+          });
+        else if (conversation.type === GROUP_MESSAGE) {
+          const othersMem = conversation.members.filter(
+            (mem) => mem !== userId
+          );
+          othersMem.forEach((mem) => {
+            socket.current.emit("new-message", {
+              receiverId: mem._id,
+              message: messageText,
+            });
+          });
+        }
+
         setMessageText("");
       })
       .catch((err) => {

@@ -38,6 +38,7 @@ function Home() {
   const [callerSignal, setCallerSignal] = useState("");
   const [isOpenNewGrPopup, setIsOpenNewGrPopup] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
+  const [lastestGroupCreated, setLastestGroupCreated] = useState("");
 
   const socket = useRef();
   const myStream = useRef();
@@ -47,7 +48,10 @@ function Home() {
   // didmounted
   useEffect(() => {
     console.log("alo");
-    socket.current = io("https://vp-chat.herokuapp.com");
+    socket.current =
+      process.env.ENV === "production"
+        ? io("https://vp-chat.herokuapp.com")
+        : io("http://localhost:8000");
 
     // component unmounted:
     return () => {
@@ -87,6 +91,12 @@ function Home() {
     socket.current.on("new-message", (data) => {
       console.log(data);
       setLastestReceivedMsg(data.message);
+    });
+
+    // receive new group conversation:
+    socket.current.on("new-group-conversation", (data) => {
+      console.log(data);
+      setLastestGroupCreated(data.conversationId);
     });
 
     // receiving call:
@@ -195,6 +205,7 @@ function Home() {
     lastestSentMsg,
     selectedOnlineUser,
     lastestOnOffUser,
+    lastestGroupCreated,
   ]);
 
   const handleSearchTextOnChange = (e) => {
@@ -419,6 +430,8 @@ function Home() {
         setOpen={setIsOpenNewGrPopup}
         allUsers={allUsers}
         token={token}
+        setLastestGroupCreated={setLastestGroupCreated}
+        socket={socket}
       />
       {/* Calling Popup */}
       {isCalling && (

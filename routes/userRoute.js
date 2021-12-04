@@ -1,39 +1,38 @@
-const router = require('express').Router()
-const userCtrl = require('../controller/userCtrl')
-const auth = require('../middleware/auth')
-const authAdmin = require('../middleware/authAdmin')
+const router = require("express").Router();
+const userCtrl = require("../controller/userCtrl");
+const auth = require("../middleware/auth");
+const authAdmin = require("../middleware/authAdmin");
 
-router.post('/register', userCtrl.register)
+router.post("/register", userCtrl.register);
 
-router.post('/activation', userCtrl.activateEmail)
+router.post("/activation", userCtrl.activateEmail);
 
-router.post('/login', userCtrl.login)
+router.post("/login", userCtrl.login);
 
-router.post('/refresh_token', userCtrl.getAccessToken)
+router.post("/refresh_token", userCtrl.getAccessToken);
 
-router.post('/forgot', userCtrl.forgotPassword)
+router.post("/forgot", userCtrl.forgotPassword);
 
-router.post('/reset', auth, userCtrl.resetPassword)
+router.post("/reset", auth, userCtrl.resetPassword);
 
-router.get('/infor', auth, userCtrl.getUserInfor)
+router.get("/infor", auth, userCtrl.getUserInfor);
 
-router.get('/all_infor', auth, authAdmin, userCtrl.getUsersAllInfor)
+router.get("/all_infor", auth, authAdmin, userCtrl.getUsersAllInfor);
 
-router.get('/logout', userCtrl.logout)
+router.get("/logout", userCtrl.logout);
 
-router.patch('/update', auth, userCtrl.updateUser)
+router.patch("/update", auth, userCtrl.updateUser);
 
-router.patch('/update_role/:id', auth, authAdmin, userCtrl.updateUsersRole)
+router.patch("/update_role/:id", auth, authAdmin, userCtrl.updateUsersRole);
 
-router.delete('/delete/:id', auth, authAdmin, userCtrl.deleteUser) 
-
+router.delete("/delete/:id", auth, authAdmin, userCtrl.deleteUser);
 
 // Social Login
-router.post('/google_login', userCtrl.googleLogin)
+router.post("/google_login", userCtrl.googleLogin);
 
-router.post('/facebook_login', userCtrl.facebookLogin)
+router.post("/facebook_login", userCtrl.facebookLogin);
 
+// Get all users with only name
+router.get("/others/only_name", auth, userCtrl.getAllUserWithOnlyName);
 
-
-
-module.exports = router
+module.exports = router;

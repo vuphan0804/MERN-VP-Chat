@@ -29,7 +29,7 @@ function Conversation(props) {
       });
     } else {
       setConAvatar(DEFAULT_GROUP_AVATAR);
-      setPartner(DEFAULT_GROUP_NAME);
+      setPartner(conversation.name);
     }
   }, [props]);
 
