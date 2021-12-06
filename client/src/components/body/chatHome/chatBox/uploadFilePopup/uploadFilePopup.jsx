@@ -117,7 +117,6 @@ function UploadFilePopup(props) {
       <DialogContent className="dialog-content" dividers>
         <label htmlFor="icon-button-file">
           <Input
-            accept="image/png, image/jpeg"
             id="icon-button-file"
             type="file"
             onChange={handleUploadOnChange}

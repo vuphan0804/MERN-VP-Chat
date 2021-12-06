@@ -1,7 +1,10 @@
 import React from "react";
-import FileViewer from "react-file-viewer";
+import Link from "@mui/material/Link";
 
-import { getTypeFromFilePath } from "../../../../../helpers/funcHepler";
+import {
+  getFileNameFromFilePath,
+  getFileTypeFromFilePath,
+} from "../../../../../helpers/funcHepler";
 
 import { TEXT } from "../../../../../constants/message";
 
@@ -15,8 +18,14 @@ function Message({ own, message }) {
         <img src={message.sender.avatar} alt="" className="messageImg" />
         {message.type === TEXT ? (
           <p className="messageText"> {message.text}</p>
-        ) : (
+        ) : ["png", "jpeg", "jpe", "jpg"].includes(
+            getFileTypeFromFilePath(message.path)
+          ) ? (
           <img className="messageImage" src={message.path} alt="file img" />
+        ) : (
+          <Link className="messageText" href={message.path} underline="hover">
+            {getFileNameFromFilePath(message.path)}
+          </Link>
         )}
       </div>
       <div className="messageBottom">{message.createdAt}</div>
