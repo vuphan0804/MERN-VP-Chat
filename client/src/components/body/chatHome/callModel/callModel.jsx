@@ -11,11 +11,8 @@ function callModel(props) {
     handleCallCanceling,
     handleCallAccepting,
   } = props;
+  console.log("hello ae", props);
 
-  // const [hours, setHours] = useState(0);
-  // const [mins, setMins] = useState(0);
-  // const [second, setSecond] = useState(0);
-  // const [total, setTotal] = useState(0);
   return (
     <div className="callModel">
       <img className="partnerImg" src={user.avatar} alt="" />

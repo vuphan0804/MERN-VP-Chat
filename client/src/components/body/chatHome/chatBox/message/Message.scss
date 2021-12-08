@@ -6,7 +6,7 @@
 }
 .messageTop {
   display: flex;
-
+  padding-left: 10px;
   .messageImg {
     width: 40px;
     height: 40px;
@@ -19,6 +19,7 @@
     border-radius: 20px;
     background-color: rgb(236, 235, 235);
     max-width: 300px;
+    color: black;
   }
   .messageImage {
     padding: 10px;
@@ -29,11 +30,13 @@
 .messageBottom {
   font-size: 12px;
   margin-top: 10px;
+  padding-left: 5px;
 }
 .message.own {
   align-items: flex-end;
+  padding-right: 10px;
   .messageText {
     background: $primary-color;
-    color: white;
+    color: $text-color;
   }
 }

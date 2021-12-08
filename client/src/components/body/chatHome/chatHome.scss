@@ -2,31 +2,39 @@
 .messenger {
   height: calc(100vh - 70px);
   display: flex;
-  background: white;
+  background: $primary-color;
 }
 
 // Chat Menu
 .chatMenu {
   flex: 3.5;
   .chatMenuWrapper {
-    border-right: 1px solid $border-color;
+    color: $text-color;
     .chatMenuInput {
       width: 100%;
       padding: 10px;
       border: none;
-      border-radius: 20px;
-      border-bottom: 1px solid $border-color;
+      border-radius: 15px;
+      margin-right: 10px;
       margin-bottom: 20px;
-      background: $border-color;
+      color: $text-color;
+      background: $press-color;
       &:focus {
         outline: none;
       }
     }
 
     .newGroupBtn {
-      margin-bottom: 10px;
-      padding: 5px;
+      font-size: 15px;
+      padding: 8px;
+      margin: 8px;
+      margin-left: 15px;
       border-radius: 10px;
+      background-color: $light-color;
+      &:hover {
+        color: $text-color;
+        background-color: $base-color;
+      }
     }
   }
 }
@@ -39,8 +47,11 @@
 .chatMenuWrapper,
 .chatBoxWrapper,
 .chatOnlineWrapper {
-  padding: 10px;
+  margin: 0 5px;
   height: 100%;
+  background: $base-color;
+  border-radius: 25px;
+  color: $text-color;
 }
 
 // Call Model

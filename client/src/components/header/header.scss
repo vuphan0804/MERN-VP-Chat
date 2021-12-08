@@ -47,11 +47,12 @@ header {
     }
     .dropdown {
         position: absolute;
-        background: $primary-color;
+        background: $base-color;
         width: 100%;
         width: calc(100% + 30px);
         top: 70px;
         display: none;
+        z-index: 10;
     }
     &:hover {
         .dropdown {

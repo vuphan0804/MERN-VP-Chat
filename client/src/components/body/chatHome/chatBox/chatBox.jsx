@@ -44,6 +44,11 @@ function ChatBox(props) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const handleEnterKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      handleMessageTextOnSubmit();
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -151,19 +156,20 @@ function ChatBox(props) {
           <div ref={messagesEndRef} />
         </div>
         <div className="chatBoxBottom">
-          <textarea
-            className="chatMessageInput"
-            placeholder="write somthing..."
-            value={messageText}
-            onChange={handleMessageTextOnchange}
-            wra
-          ></textarea>
           <button
             className="chatSubmitButton"
             onClick={() => setOpenUploadPopup(true)}
           >
             <i class="fas fa-paperclip"></i>
           </button>
+          <textarea
+            className="chatMessageInput"
+            placeholder="write somthing..."
+            value={messageText}
+            onChange={handleMessageTextOnchange}
+            onKeyDown={handleEnterKeyPress}
+            wra
+          ></textarea>
           <button
             className="chatSubmitButton"
             onClick={handleMessageTextOnSubmit}

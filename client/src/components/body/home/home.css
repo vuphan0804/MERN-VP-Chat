@@ -1,0 +1,49 @@
+.container {
+  width: auto;
+  height: 90vh;
+  color: white;
+}
+
+.container h1 {
+  text-align: center;
+  text-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+  font-weight: 800;
+  font-size: 60px;
+}
+
+.container h2 {
+  text-align: center;
+  font-size: 50px;
+}
+
+.container .button-img {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.container .button-img div {
+  height: 80px;
+  width: 80px;
+  background-size: cover;
+  margin: 50px 10px;
+}
+
+.container .button-img .img-1 {
+  background-image: url(../../../img/chat.png);
+}
+
+.container .button-img .img-2 {
+  background-image: url(../../../img/call.png);
+}
+
+.container .button-img .img-3 {
+  background-image: url(../../../img/callvideo.png);
+}
+/*# sourceMappingURL=home.css.map */
