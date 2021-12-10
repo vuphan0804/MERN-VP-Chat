@@ -29,6 +29,8 @@ function ChatBox(props) {
     setLastestSentMsg,
     handleAudioCalling,
     handleVideoCalling,
+    handleGrAudioCalling,
+    handleGrVideoCalling,
   } = props;
   setConId(conversationId);
 
@@ -38,7 +40,7 @@ function ChatBox(props) {
   const [messageText, setMessageText] = useState("");
   const [submitMessageText, setSubmitMessageText] = useState("");
   const [partner, setPartner] = useState({ _id: userId }); // init is own user
-  const [conversation, setConversation] = useState({}); // init is own user
+  const [conversation, setConversation] = useState({});
   const [openUploadPopup, setOpenUploadPopup] = useState(false);
 
   const scrollToBottom = () => {
@@ -136,9 +138,13 @@ function ChatBox(props) {
     <div className="chatBox">
       <div className="chatBoxWrapper">
         <ActionBar
+          userId={userId}
           partner={partner}
+          conversation={conversation}
           handleAudioCalling={handleAudioCalling}
           handleVideoCalling={handleVideoCalling}
+          handleGrAudioCalling={handleGrAudioCalling}
+          handleGrVideoCalling={handleGrVideoCalling}
         />
         <div className="chatBoxTop">
           {messages.map((msg) =>

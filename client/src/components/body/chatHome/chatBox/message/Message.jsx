@@ -11,7 +11,6 @@ import { TEXT } from "../../../../../constants/message";
 import "./Message.scss";
 
 function Message({ own, message }) {
-  console.log(message);
   return (
     <div className={own ? "message own" : "message"}>
       <div className="messageTop">

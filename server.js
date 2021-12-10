@@ -9,7 +9,6 @@ const http = require("http");
 const morgan = require("morgan");
 
 const userModel = require("./models/userModel");
-const { nextTick } = require("process");
 
 const app = express();
 const server = http.createServer(app);
@@ -67,7 +66,7 @@ const findSocketIdByUserId = (userId) => {
 
 const findUserIdBySocketId = (socketId) => {
   const user = socketUsers.find((user) => user.socketId === socketId);
-  return user ? user.socketId : null;
+  return user ? user.userId : null;
 };
 
 io.on("connection", (socket) => {
@@ -121,12 +120,22 @@ io.on("connection", (socket) => {
     }
   });
 
-  // ending call:
-  socket.on("end-call", (data) => {
-    if (data.partner) {
-      const socketId = findSocketIdByUserId(data.partner);
-      socketId && io.to(socketId).emit("end-call");
-    }
+  // gr calling:
+  socket.on("gr-call-user", (data) => {
+    data.conversation.members.forEach((mem) => {
+      const receivingSocketId = findSocketIdByUserId(mem._id);
+      if (receivingSocketId) {
+        io.to(receivingSocketId).emit("gr-call-user", {
+          from: data.from,
+          userId: data.userId,
+          name: data.name,
+          avatar: data.avatar,
+          callType: data.callType,
+          signalData: data.signalData,
+          conversation: data.conversation,
+        });
+      }
+    });
   });
 
   // accepting call:
@@ -135,6 +144,55 @@ io.on("connection", (socket) => {
     if (data.to) {
       const socketId = findSocketIdByUserId(data.to);
       socketId && io.to(socketId).emit("call-accepted", data);
+    }
+  });
+
+  // gr accepting call:
+  socket.on("gr-call-accepted", (data) => {
+    // console.log("gr-call-accepted");
+    if (data.conversation.members) {
+      const userId = findUserIdBySocketId(socket.id);
+      const otherMems = data.conversation.members.filter(
+        (mem) => mem._id !== userId
+      );
+      const joiner = data.conversation.members.find(
+        (mem) => mem._id === userId
+      );
+      otherMems.forEach((mem) => {
+        const socketId = findSocketIdByUserId(mem._id);
+        socketId &&
+          io
+            .to(socketId)
+            .emit("gr-call-accepted", { ...data, joinerName: joiner.name });
+      });
+    }
+  });
+
+  // ending call:
+  socket.on("end-call", (data) => {
+    if (data.partner) {
+      const socketId = findSocketIdByUserId(data.partner);
+      socketId && io.to(socketId).emit("end-call");
+    }
+  });
+
+  // gr ending call:
+  socket.on("gr-end-call", (data) => {
+    if (data.conversation.members) {
+      const userId = findUserIdBySocketId(socket.id);
+      const otherMems = data.conversation.members.filter(
+        (mem) => mem._id !== userId
+      );
+      const leaver = data.conversation.members.find(
+        (mem) => mem._id === userId
+      );
+      otherMems.forEach((mem) => {
+        const socketId = findSocketIdByUserId(mem._id);
+        socketId &&
+          io
+            .to(socketId)
+            .emit("gr-end-call", { ...data, leaverName: leaver.name });
+      });
     }
   });
 });

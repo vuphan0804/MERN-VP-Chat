@@ -9,7 +9,9 @@ import Conversation from "./conversation/Conversation";
 import ChatOnline from "./chatOnline/ChatOnline";
 import ChatBox from "./chatBox/chatBox";
 import CallModel from "./callModel/callModel";
+import GroupCallModel from "./callModel/groupCallModel";
 import StreamVideo from "./stream/stream";
+import GroupStreamVideo from "./stream/groupStream";
 import NewGroupPopup from "./newGroupPopup/newGroupPopup";
 
 import "./chatHome.scss";
@@ -40,10 +42,21 @@ function Home() {
   const [allUsers, setAllUsers] = useState([]);
   const [lastestGroupCreated, setLastestGroupCreated] = useState("");
 
+  // Phần call nhóm là phần code chắp vá, rất ẩu, rất ko đúng. Mong quý hảo hán thông cảm.
+  // Vì thời gian gấp gáp. Chúng tôi sẽ cải tiến code sau. Vô cùng có lỗi.
+  const [isGrCalling, setIsGrCalling] = useState(false);
+  const [isGrReceiving, setIsGrReceiving] = useState(false);
+  const [grCalees, setGrCallees] = useState([]);
+  const [isGrCallAccepted, setIsGrCallAccepted] = useState(false);
+  const [grCallerUser, setGrCallerUser] = useState();
+  const [otherMemberPeers, setOtherMemberPeers] = useState([]);
+  const [callingConversation, setCallingConversation] = useState();
+
   const socket = useRef();
   const myStream = useRef();
   const partnerStream = useRef();
   const peerRef = useRef();
+  const peersRef = useRef([]);
 
   // didmounted
   useEffect(() => {
@@ -112,6 +125,48 @@ function Home() {
       setCallerSignal(data.signalData);
     });
 
+    // gr receiving call:
+    socket.current.on("gr-call-user", (data) => {
+      console.log("gr callee receiving call");
+      setCallingType(data.callType);
+      setCallingConversation(data.conversation);
+      setGrCallerUser({
+        _id: data.userId,
+        name: data.name,
+        avatar: data.avatar,
+      });
+      setIsGrReceiving(true);
+      setCallerSignal(data.signalData);
+    });
+
+    // gr call accepted:
+    socket.current.on("gr-call-accepted", (data) => {
+      console.log("gr new joiner");
+
+      // TODO:
+      const peer = { newPeer: "newPeer", name: data.joinerName };
+      // const peer = new Peer({
+      //   initiator: false,
+      //   trickle: false,
+      //   stream: myStream.current.srcObject,
+      //   config: {
+      //     iceServers: [
+      //       { urls: "stun:stun.l.google.com:19302" },
+      //       { urls: "stun:stun1.l.google.com:19302" },
+      //       // { urls: "stun:stun2.l.google.com:19302" },
+      //       // { urls: "stun:stun3.l.google.com:19302" },
+      //       // { urls: "stun:stun4.l.google.com:19302" },
+      //     ],
+      //   },
+      // });
+
+      // peer.signal(data.signalData);
+
+      setOtherMemberPeers((prev) => [...prev, peer]);
+
+      peersRef.current.push(peer);
+    });
+
     // call ended:
     socket.current.on("end-call", () => {
       console.log("call end");
@@ -139,6 +194,14 @@ function Home() {
 
       if (peerRef.current) peerRef.current.removeAllListeners("close");
       window.location.reload();
+    });
+
+    // 1 mem in gr end call:
+    // call ended:
+    socket.current.on("gr-end-call", (data) => {
+      setOtherMemberPeers((prev) =>
+        prev.filter((mem) => mem.name !== data.leaverName)
+      );
     });
 
     // page reloaded or closed:
@@ -255,9 +318,9 @@ function Home() {
             iceServers: [
               { urls: "stun:stun.l.google.com:19302" },
               { urls: "stun:stun1.l.google.com:19302" },
-              { urls: "stun:stun2.l.google.com:19302" },
-              { urls: "stun:stun3.l.google.com:19302" },
-              { urls: "stun:stun4.l.google.com:19302" },
+              // { urls: "stun:stun2.l.google.com:19302" },
+              // { urls: "stun:stun3.l.google.com:19302" },
+              // { urls: "stun:stun4.l.google.com:19302" },
             ],
           },
         });
@@ -311,9 +374,9 @@ function Home() {
             iceServers: [
               { urls: "stun:stun.l.google.com:19302" },
               { urls: "stun:stun1.l.google.com:19302" },
-              { urls: "stun:stun2.l.google.com:19302" },
-              { urls: "stun:stun3.l.google.com:19302" },
-              { urls: "stun:stun4.l.google.com:19302" },
+              // { urls: "stun:stun2.l.google.com:19302" },
+              // { urls: "stun:stun3.l.google.com:19302" },
+              // { urls: "stun:stun4.l.google.com:19302" },
             ],
           },
         });
@@ -344,7 +407,7 @@ function Home() {
       });
   };
 
-  const handleCallCanceling = async () => {
+  const handleCallCanceling = () => {
     console.log("call end");
     socket.current.emit("end-call", {
       partner: isCalling ? calleeUser._id : isReceiving ? callerUser._id : null,
@@ -395,9 +458,9 @@ function Home() {
             iceServers: [
               { urls: "stun:stun.l.google.com:19302" },
               { urls: "stun:stun1.l.google.com:19302" },
-              { urls: "stun:stun2.l.google.com:19302" },
-              { urls: "stun:stun3.l.google.com:19302" },
-              { urls: "stun:stun4.l.google.com:19302" },
+              // { urls: "stun:stun2.l.google.com:19302" },
+              // { urls: "stun:stun3.l.google.com:19302" },
+              // { urls: "stun:stun4.l.google.com:19302" },
             ],
           },
         });
@@ -412,11 +475,192 @@ function Home() {
 
         peer.signal(callerSignal);
 
-        peer.on("stream", (stream) => {
-          partnerStream.current.srcObject = stream;
+        peer.on("stream", (stream1) => {
+          console.log(stream1);
+          partnerStream.current.srcObject = stream1;
         });
 
         peerRef.current = peer;
+      });
+  };
+
+  const handleGrAudioCalling = (callee) => {
+    // console.log("caller call");
+    // setCalleeUser(callee);
+    // setCallingType(AUDIOCALL);
+    // setIsCalling(true);
+    // navigator.mediaDevices
+    //   .getUserMedia({
+    //     audio: true,
+    //   })
+    //   .then((stream) => {
+    //     setIsCallAccepted(true);
+    //     myStream.current.srcObject = stream;
+    //     const peer = new Peer({
+    //       initiator: true,
+    //       trickle: false,
+    //       stream: stream,
+    //       config: {
+    //         iceServers: [
+    //           { urls: "stun:stun.l.google.com:19302" },
+    //           { urls: "stun:stun1.l.google.com:19302" },
+    //           { urls: "stun:stun2.l.google.com:19302" },
+    //           { urls: "stun:stun3.l.google.com:19302" },
+    //           { urls: "stun:stun4.l.google.com:19302" },
+    //         ],
+    //       },
+    //     });
+    //     peer.on("signal", (data) => {
+    //       if (data.renegotiate || data.transceiverRequest) return;
+    //       socket.current.emit("call-user", {
+    //         callType: AUDIOCALL,
+    //         userToCall: callee._id,
+    //         from: socket.current.id,
+    //         userId: auth.user._id,
+    //         name: auth.user.name,
+    //         avatar: auth.user.avatar,
+    //         signalData: JSON.stringify(data),
+    //       });
+    //     });
+    //     peer.on("stream", (stream) => {
+    //       partnerStream.current.srcObject = stream;
+    //     });
+    //     // call accepted:
+    //     socket.current.on("call-accepted", (data) => {
+    //       console.log("caller call callee successfully");
+    //       peer.signal(data.signalData);
+    //     });
+    //     peerRef.current = peer;
+    //   });
+  };
+
+  const handleGrVideoCalling = (conversation, callees) => {
+    console.log("gr caller call");
+    setGrCallees(callees);
+    setCallingType(VIDEOCALL);
+    setIsGrCalling(true);
+
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: true,
+      })
+      .then((stream) => {
+        setIsGrCallAccepted(true);
+        myStream.current.srcObject = stream;
+
+        // TODO:
+        // const peer = new Peer({
+        //   initiator: true,
+        //   trickle: false,
+        //   stream: stream,
+        //   config: {
+        //     iceServers: [
+        //       { urls: "stun:stun.l.google.com:19302" },
+        //       { urls: "stun:stun1.l.google.com:19302" },
+        //       // { urls: "stun:stun2.l.google.com:19302" },
+        //       // { urls: "stun:stun3.l.google.com:19302" },
+        //       // { urls: "stun:stun4.l.google.com:19302" },
+        //     ],
+        //   },
+        // });
+
+        callees.forEach((callee) => {
+          // peer.on("signal", (data) => {
+          //   if (data.renegotiate || data.transceiverRequest) return;
+          //   socket.current.emit("gr-call-user", {
+          //     conversation,
+          //     callType: VIDEOCALL,
+          //     userToCall: callee._id,
+          //     from: socket.current.id,
+          //     userId: auth.user._id,
+          //     name: auth.user.name,
+          //     avatar: auth.user.avatar,
+          //     signalData: JSON.stringify(data),
+          //   });
+          // });
+          // peer.on("stream", (stream1) => {
+          //   partnerStream.current.srcObject = stream1;
+          // });
+          // call accepted:
+          // socket.current.on("call-accepted", (data) => {
+          //   console.log("caller call callee successfully");
+          //   peer.signal(data.signalData);
+          // });
+
+          socket.current.emit("gr-call-user", {
+            conversation,
+            callType: VIDEOCALL,
+            userToCall: callee._id,
+            from: socket.current.id,
+            userId: auth.user._id,
+            name: auth.user.name,
+            avatar: auth.user.avatar,
+            signalData: JSON.stringify({}),
+          });
+        });
+
+        //peerRef.current = peer;
+      });
+  };
+
+  const handleGrCallCanceling = () => {
+    console.log("gr call canceling");
+    socket.current.emit("gr-end-call", {
+      conversation: callingConversation,
+    });
+
+    window.location.reload();
+  };
+
+  const handleGrCallAccepting = () => {
+    console.log("gr callee accepting call");
+    setIsGrCallAccepted(true);
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: callingType === VIDEOCALL ? true : false,
+      })
+      .then(async (stream) => {
+        myStream.current.srcObject = stream;
+        // TODO:
+        // const peer = new Peer({
+        //   initiator: false,
+        //   trickle: false,
+        //   stream: stream,
+        //   config: {
+        //     iceServers: [
+        //       { urls: "stun:stun.l.google.com:19302" },
+        //       { urls: "stun:stun1.l.google.com:19302" },
+        //       // { urls: "stun:stun2.l.google.com:19302" },
+        //       // { urls: "stun:stun3.l.google.com:19302" },
+        //       // { urls: "stun:stun4.l.google.com:19302" },
+        //     ],
+        //   },
+        // });
+        // peer.on("signal", (data) => {
+        //   if (data.renegotiate || data.transceiverRequest) return;
+        //   socket.current.emit("gr-call-accepted", {
+        //     conversation: callingConversation,
+        //     signalData: JSON.stringify(data),
+        //   });
+        // });
+
+        // peer.signal(callerSignal);
+
+        const peer = {
+          newPeer: "newPeer",
+          name: grCallerUser.name,
+        };
+
+        socket.current.emit("gr-call-accepted", {
+          conversation: callingConversation,
+          signalData: JSON.stringify({}),
+        });
+
+        setOtherMemberPeers((prev) => [...prev, peer]);
+
+        peersRef.current.push(peer);
       });
   };
 
@@ -456,14 +700,54 @@ function Home() {
           />
         </div>
       )}
+      {/* Group Calling Popup */}
+      {isGrCalling && (
+        <div className="callModelWrapper">
+          <GroupCallModel
+            callingType={callingType}
+            isCalling={true}
+            grCallerUser={{ name: auth.user.name }}
+            handleCallCanceling={handleGrCallCanceling}
+            token={token}
+          />
+        </div>
+      )}
+      {/* Group Receiving Popup */}
+      {!isGrCalling && isGrReceiving && (
+        <div className="callModelWrapper">
+          <GroupCallModel
+            callingType={callingType}
+            isCalling={false}
+            conversation={callingConversation}
+            grCallerUser={grCallerUser}
+            handleGrCallCanceling={handleGrCallCanceling}
+            handleGrCallAccepting={handleGrCallAccepting}
+            token={token}
+          />
+        </div>
+      )}
       {/* Stream Calling */}
       {isCallAccepted && (
         <div className="peerWrapper">
           <StreamVideo
+            caller={callerUser}
+            callee={calleeUser}
             callingType={callingType}
             myStream={myStream}
             partnerStream={partnerStream}
             handleCallCanceling={handleCallCanceling}
+          />
+        </div>
+      )}
+      {/* Group Stream Calling */}
+      {isGrCallAccepted && (
+        <div className="peerWrapper">
+          <GroupStreamVideo
+            callingType={callingType}
+            myStream={myStream}
+            otherMemberPeers={otherMemberPeers}
+            partnerStream={partnerStream}
+            handleGrCallCanceling={handleGrCallCanceling}
           />
         </div>
       )}
@@ -508,6 +792,8 @@ function Home() {
                 setLastestSentMsg={handleLastestSentMsg}
                 handleAudioCalling={handleAudioCalling}
                 handleVideoCalling={handleVideoCalling}
+                handleGrAudioCalling={handleGrVideoCalling}
+                handleGrVideoCalling={handleGrVideoCalling}
               />
             }
           />
