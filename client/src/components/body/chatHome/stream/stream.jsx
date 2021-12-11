@@ -1,6 +1,7 @@
 import { AUDIOCALL, VIDEOCALL } from "../../../../constants/calling";
 import "./stream.scss";
 import "../callModel/callModel";
+import { useEffect, useState } from "react";
 
 function streamVideo(props) {
   const {
@@ -12,16 +13,36 @@ function streamVideo(props) {
     timer,
     useTimer,
   } = props;
-  console.log("meomeo kiki", user);
 
   // Timer
-  const formatTime = () => {
-    const getSeconds = `0${timer % 60}`.slice(-2);
-    const minutes = `${Math.floor(timer / 60)}`;
-    const getMinutes = `0${minutes % 60}`.slice(-2);
-    const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
+  const Timer = () => {
+    useEffect(() => {
+      var minutesLabel = document.getElementById("minutes");
+      var secondsLabel = document.getElementById("seconds");
+      var totalSeconds = 0;
+      setInterval(setTime, 1000);
 
-    return `${getHours} : ${getMinutes} : ${getSeconds}`;
+      function setTime() {
+        ++totalSeconds;
+        secondsLabel.innerHTML = pad(totalSeconds % 60);
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+      }
+
+      function pad(val) {
+        var valString = val + "";
+        if (valString.length < 2) {
+          return "0" + valString;
+        } else {
+          return valString;
+        }
+      }
+    }, []);
+
+    return (
+      <div style={{ marginTop: "5px" }}>
+        <label id="minutes">00</label>:<label id="seconds">00</label>
+      </div>
+    );
   };
 
   return (
@@ -36,9 +57,9 @@ function streamVideo(props) {
         <div className="audiosWrapper">
           <img className="partnerImg" src={user.avatar} alt="" />
           <h2 className="partnerName">{user.name}</h2>
-          <p>{formatTime(timer)}</p>
-          <div controls ref={myStream} autoPlay />
-          <div controls ref={partnerStream} autoPlay />
+          <Timer />
+          <audio ref={myStream} autoPlay />
+          <audio ref={partnerStream} autoPlay />
         </div>
       )}
 

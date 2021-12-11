@@ -51,62 +51,12 @@ function Home() {
   const [grCallerUser, setGrCallerUser] = useState();
   const [otherMemberPeers, setOtherMemberPeers] = useState([]);
   const [callingConversation, setCallingConversation] = useState();
-  // Timer
-  const [timer, setTimer] = useState(0);
-  const [isActicve, setIsActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const countRef = useRef(null);
 
   const socket = useRef();
   const myStream = useRef();
   const partnerStream = useRef();
   const peerRef = useRef();
   const peersRef = useRef([]);
-
-  // Timer Handler
-  const useTimer = (initialState = 0) => {
-    const [timer, setTimer] = React.useState(initialState);
-    const [isActive, setIsActive] = React.useState(false);
-    const [isPaused, setIsPaused] = React.useState(false);
-    const countRef = React.useRef(null);
-
-    const handleStart = () => {
-      setIsActive(true);
-      setIsPaused(true);
-      countRef.current = setInterval(() => {
-        setTimer((timer) => timer + 1);
-      }, 1000);
-    };
-
-    const handlePause = () => {
-      clearInterval(countRef.current);
-      setIsPaused(false);
-    };
-
-    const handleResume = () => {
-      setIsPaused(true);
-      countRef.current = setInterval(() => {
-        setTimer((timer) => timer + 1);
-      }, 1000);
-    };
-
-    const handleReset = () => {
-      clearInterval(countRef.current);
-      setIsActive(false);
-      setIsPaused(false);
-      setTimer(0);
-    };
-
-    return {
-      timer,
-      isActive,
-      isPaused,
-      handleStart,
-      handlePause,
-      handleResume,
-      handleReset,
-    };
-  };
 
   // didmounted
   useEffect(() => {
@@ -786,8 +736,7 @@ function Home() {
             myStream={myStream}
             partnerStream={partnerStream}
             handleCallCanceling={handleCallCanceling}
-            user={callerUser}
-            useTimer={useTimer}
+            user={isCalling ? calleeUser : callerUser}
           />
         </div>
       )}
