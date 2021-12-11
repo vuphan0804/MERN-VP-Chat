@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import { GROUP_MESSAGE } from "../../../../constants/conversation";
+import "./newGroupPopup.scss";
 const axios = require("axios");
 
 function NewGroupConversation(props) {
@@ -63,12 +64,13 @@ function NewGroupConversation(props) {
 
   return (
     <Dialog
+      className="dialog"
       sx={{ "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } }}
       maxWidth="xs"
       open={open}
     >
-      <DialogTitle>Select Group Members</DialogTitle>
-      <DialogContent dividers>
+      <DialogTitle className="dialog-title">Select Group Members</DialogTitle>
+      <DialogContent dividers className="dialog-content1">
         <TextField
           style={{ marginBottom: "10px" }}
           label="Group name"
@@ -89,11 +91,13 @@ function NewGroupConversation(props) {
           ))}
         </FormGroup>
       </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={handleCancel}>
+      <DialogActions className="dialog-actions">
+        <Button className="dialog-actions" autoFocus onClick={handleCancel}>
           Cancel
         </Button>
-        <Button onClick={handleOk}>Ok</Button>
+        <Button className="dialog-actions" onClick={handleOk}>
+          Ok
+        </Button>
       </DialogActions>
     </Dialog>
   );

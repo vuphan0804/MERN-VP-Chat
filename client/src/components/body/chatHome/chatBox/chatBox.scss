@@ -31,7 +31,8 @@
       padding: 10px;
       margin-bottom: 20px;
       border-radius: 30px;
-      background: rgba($color: $border-color, $alpha: 0.1);
+      background-color: $base-color;
+      color: $text-color;
     }
     .chatSubmitButton {
       margin: 0 5px 20px 5px;
@@ -40,7 +41,7 @@
       i {
         align-items: center;
         font-size: 1.5rem;
-        color: teal;
+        color: $light-color;
       }
     }
   }

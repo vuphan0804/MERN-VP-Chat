@@ -736,6 +736,7 @@ function Home() {
             myStream={myStream}
             partnerStream={partnerStream}
             handleCallCanceling={handleCallCanceling}
+            user={callerUser}
           />
         </div>
       )}
@@ -798,7 +799,7 @@ function Home() {
             }
           />
           <Route path="/conversations">
-            <h1>Open one conversation to chat</h1>
+            <h1 style={{ color: "white" }}>Open one conversation to chat</h1>
           </Route>
         </Switch>
         {/* Online */}

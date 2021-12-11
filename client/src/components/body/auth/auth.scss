@@ -32,10 +32,13 @@
             width: 150px;
             padding: 10px 0;
             color: white;
-            background: $primary-color;
+            background: $press-color;
             text-decoration: uppercase;
             letter-spacing: 1.5px;
             margin-right: 10px;
+            &:hover {
+                background-color: $base-color;
+            }
         }
     }
     p {
@@ -105,7 +108,7 @@
 }
 .login_page {
     margin-top: 50px;
-    background: rgba(255, 255, 255, 0.3);
+    background: $hover-color;
     border-radius: 10px;
     box-shadow: -30px 30px 20px rgba($color: #1d1c1c, $alpha: 0.3);
     // animation: animate 5s ease-in-out infinite;

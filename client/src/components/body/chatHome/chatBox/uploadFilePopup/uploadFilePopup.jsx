@@ -113,7 +113,7 @@ function UploadFilePopup(props) {
       maxWidth="xs"
       open={open}
     >
-      <DialogTitle>Upload File</DialogTitle>
+      <DialogTitle className="dialog-title">Upload File</DialogTitle>
       <DialogContent className="dialog-content" dividers>
         <label htmlFor="icon-button-file">
           <Input

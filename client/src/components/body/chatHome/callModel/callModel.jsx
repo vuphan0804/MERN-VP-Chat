@@ -11,6 +11,7 @@ function callModel(props) {
     handleCallCanceling,
     handleCallAccepting,
   } = props;
+  console.log("hello ae", props);
 
   return (
     <div className="callModel">

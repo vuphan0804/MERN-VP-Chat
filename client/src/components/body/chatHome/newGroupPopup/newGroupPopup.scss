@@ -1,0 +1,15 @@
+@import "../../../../index.scss";
+.dialog {
+    background-color: $base-color;
+    .dialog-title {
+        background-color: $base-color;
+        color: $text-color;
+    }
+    .dialog-content1 {
+        background-color: $hover-color;
+    }
+    .dialog-actions {
+        background-color: $base-color;
+        color: $text-color;
+    }
+}

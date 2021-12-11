@@ -1,7 +1,10 @@
-$primary-color: #008ce4;
-$base-color: #4ea2e7;
+$primary-color: linear-gradient(90deg, rgba(15, 173, 153, 1) 0%, rgba(47, 181, 227, 1) 100%);
 $light-color: #80d6ff;
 $border-color: rgb(209, 209, 209);
+$text-color: aliceblue;
+$base-color: rgba(36, 36, 36, 0.5);
+$press-color: rgba(71, 71, 71, 0.5);
+$hover-color: rgba(100, 100, 100, 0.4);
 * {
   padding: 0;
   box-sizing: border-box;
@@ -13,7 +16,8 @@ $border-color: rgb(209, 209, 209);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  // font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: "Baloo Bhaijaan 2", cursive;
 }
 .App {
   max-width: 1200px;
@@ -23,7 +27,6 @@ code {
   margin: 0 auto;
   overflow: hidden;
   background: $primary-color;
-  background: $base-color;
   box-shadow: rgba(0, 0, 0, 0.555) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }
 a {

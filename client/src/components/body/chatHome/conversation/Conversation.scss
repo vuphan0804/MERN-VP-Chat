@@ -1,11 +1,12 @@
+@import "../../../../index.scss";
 .conversation {
   display: flex;
   align-items: center;
   padding: 5px;
   cursor: pointer;
-  color: black;
+  color: $text-color;
   &:hover {
-    background-color: rgb(238, 238, 238);
+    background-color: $hover-color;
   }
   .conversationImg {
     width: 60px;
@@ -24,8 +25,8 @@
   align-items: center;
   padding: 5px;
   cursor: pointer;
-  background-color: #e9f3ff;
-  color: black;
+  background-color: $press-color;
+  color: $text-color;
 
   .conversationImg {
     width: 60px;

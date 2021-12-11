@@ -1,8 +1,11 @@
 import { AUDIOCALL, VIDEOCALL } from "../../../../constants/calling";
-require("./stream.scss");
+import "./stream.scss";
+import "../callModel/callModel";
 
 function streamVideo(props) {
-  const { callingType, myStream, partnerStream, handleCallCanceling } = props;
+  const { user, callingType, myStream, partnerStream, handleCallCanceling } =
+    props;
+  console.log("meomeo kiki", user);
   return (
     <div className="streamVideo">
       {callingType === VIDEOCALL && (
@@ -12,9 +15,11 @@ function streamVideo(props) {
         </div>
       )}
       {callingType === AUDIOCALL && (
-        <div className="videosWrapper">
-          <audio controls ref={myStream} autoPlay />
-          <audio controls ref={partnerStream} autoPlay />
+        <div className="audiosWrapper">
+          <img className="partnerImg" src={user.avatar} alt="" />
+          <h2 className="partnerName">{user.name}</h2>
+          <div controls ref={myStream} autoPlay />
+          <div controls ref={partnerStream} autoPlay />
         </div>
       )}
 
