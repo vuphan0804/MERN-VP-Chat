@@ -24,19 +24,19 @@ function GroupStreamVideo(props) {
     }, []);
 
     return (
-      <div className="participant">
-        <video className="video-partner" ref={streamRef} autoPlay />
+      <div className="grParticipant">
+        <video className="grVideo-partner" ref={streamRef} autoPlay />
         <p>{peer.name}</p>
       </div>
     );
   };
 
   return (
-    <div className="streamVideo">
+    <div className="grStreamVideo">
       {callingType === VIDEOCALL && (
-        <div className="videosWrapper">
-          <div className="participant">
-            <video className="video-mine" ref={myStream} autoPlay />
+        <div className="grVideosWrapper">
+          <div className="grParticipant">
+            <video className="grVideo-mine" ref={myStream} autoPlay />
             <p>You</p>
           </div>
           {otherMemberPeers.map((peer, pos) => (
@@ -45,7 +45,7 @@ function GroupStreamVideo(props) {
         </div>
       )}
       {callingType === AUDIOCALL && (
-        <div className="videosWrapper">
+        <div className="grVideosWrapper">
           <audio controls ref={myStream} autoPlay />
           {/* <audio controls ref={partnerStream} autoPlay /> */}
         </div>

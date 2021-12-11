@@ -10,6 +10,7 @@ function callModel(props) {
     isCalling,
     handleCallCanceling,
     handleCallAccepting,
+    handleStart,
   } = props;
   console.log("hello ae", props);
 
@@ -33,7 +34,7 @@ function callModel(props) {
             {callingType === VIDEOCALL ? (
               <i className="fas fa-video"></i>
             ) : callingType === AUDIOCALL ? (
-              <i className="fas fa-phone-alt"></i>
+              <i onClick={handleStart} className="fas fa-phone-alt"></i>
             ) : null}
           </button>
         )}
