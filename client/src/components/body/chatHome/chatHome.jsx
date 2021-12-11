@@ -60,7 +60,7 @@ function Home() {
 
   // didmounted
   useEffect(() => {
-    console.log("alo");
+    // console.log("alo");
     socket.current =
       process.env.ENV === "production"
         ? io("https://vp-chat.herokuapp.com")
@@ -80,12 +80,12 @@ function Home() {
       socket.current.emit("user-connected", { userId: auth.user._id });
 
     // debug:
-    socket.current.on("new-online-socket", (data) =>
-      console.log("online:", data)
-    );
-    socket.current.on("new-offline-socket", (data) =>
-      console.log("offline:", data)
-    );
+    // socket.current.on("new-online-socket", (data) =>
+    //   // console.log("online:", data)
+    // );
+    // socket.current.on("new-offline-socket", (data) =>
+    //   // console.log("offline:", data)
+    // );
 
     // on off user:
     socket.current.on("new-online-user", (data) => {
@@ -97,24 +97,24 @@ function Home() {
 
     // get online users:
     socket.current.on("online-user", (data) => {
-      console.log(data);
+      // console.log(data);
     });
 
     // receive new message:
     socket.current.on("new-message", (data) => {
-      console.log(data);
+      // console.log(data);
       setLastestReceivedMsg(data.message);
     });
 
     // receive new group conversation:
     socket.current.on("new-group-conversation", (data) => {
-      console.log(data);
+      // console.log(data);
       setLastestGroupCreated(data.conversationId);
     });
 
     // receiving call:
     socket.current.on("call-user", (data) => {
-      console.log("callee receiving call");
+      // console.log("callee receiving call");
       setIsReceiving(true);
       setCallingType(data.callType);
       setCallerUser({
@@ -127,7 +127,7 @@ function Home() {
 
     // gr receiving call:
     socket.current.on("gr-call-user", (data) => {
-      console.log("gr callee receiving call");
+      // console.log("gr callee receiving call");
       setCallingType(data.callType);
       setCallingConversation(data.conversation);
       setGrCallerUser({
@@ -141,10 +141,14 @@ function Home() {
 
     // gr call accepted:
     socket.current.on("gr-call-accepted", (data) => {
-      console.log("gr new joiner");
+      // console.log("gr new joiner");
 
       // TODO:
-      const peer = { newPeer: "newPeer", name: data.joinerName };
+      const peer = {
+        newPeer: "newPeer",
+        name: data.joinerName,
+        avatar: data.joinerAvatar,
+      };
       // const peer = new Peer({
       //   initiator: false,
       //   trickle: false,
@@ -169,7 +173,7 @@ function Home() {
 
     // call ended:
     socket.current.on("end-call", () => {
-      console.log("call end");
+      // console.log("call end");
       navigator.getUserMedia =
         navigator.getUserMedia ||
         navigator.webkitGetUserMedia ||
@@ -215,7 +219,7 @@ function Home() {
 
   // update
   useEffect(() => {
-    console.log("reload");
+    // console.log("reload");
 
     token &&
       axios({
@@ -297,7 +301,7 @@ function Home() {
   };
 
   const handleAudioCalling = (callee) => {
-    console.log("caller call");
+    // console.log("caller call");
     setCalleeUser(callee);
     setCallingType(AUDIOCALL);
     setIsCalling(true);
@@ -343,7 +347,7 @@ function Home() {
 
         // call accepted:
         socket.current.on("call-accepted", (data) => {
-          console.log("caller call callee successfully");
+          // console.log("caller call callee successfully");
           peer.signal(data.signalData);
         });
 
@@ -352,7 +356,7 @@ function Home() {
   };
 
   const handleVideoCalling = (callee) => {
-    console.log("caller call");
+    // console.log("caller call");
     setCalleeUser(callee);
     setCallingType(VIDEOCALL);
     setIsCalling(true);
@@ -399,7 +403,7 @@ function Home() {
 
         // call accepted:
         socket.current.on("call-accepted", (data) => {
-          console.log("caller call callee successfully");
+          // console.log("caller call callee successfully");
           peer.signal(data.signalData);
         });
 
@@ -408,7 +412,7 @@ function Home() {
   };
 
   const handleCallCanceling = () => {
-    console.log("call end");
+    // console.log("call end");
     socket.current.emit("end-call", {
       partner: isCalling ? calleeUser._id : isReceiving ? callerUser._id : null,
     });
@@ -441,7 +445,7 @@ function Home() {
   };
 
   const handleCallAccepting = () => {
-    console.log("callee accepting call");
+    // console.log("callee accepting call");
     setIsCallAccepted(true);
     navigator.mediaDevices
       .getUserMedia({
@@ -476,7 +480,7 @@ function Home() {
         peer.signal(callerSignal);
 
         peer.on("stream", (stream1) => {
-          console.log(stream1);
+          // console.log(stream1);
           partnerStream.current.srcObject = stream1;
         });
 
@@ -484,61 +488,82 @@ function Home() {
       });
   };
 
-  const handleGrAudioCalling = (callee) => {
-    // console.log("caller call");
-    // setCalleeUser(callee);
-    // setCallingType(AUDIOCALL);
-    // setIsCalling(true);
-    // navigator.mediaDevices
-    //   .getUserMedia({
-    //     audio: true,
-    //   })
-    //   .then((stream) => {
-    //     setIsCallAccepted(true);
-    //     myStream.current.srcObject = stream;
-    //     const peer = new Peer({
-    //       initiator: true,
-    //       trickle: false,
-    //       stream: stream,
-    //       config: {
-    //         iceServers: [
-    //           { urls: "stun:stun.l.google.com:19302" },
-    //           { urls: "stun:stun1.l.google.com:19302" },
-    //           { urls: "stun:stun2.l.google.com:19302" },
-    //           { urls: "stun:stun3.l.google.com:19302" },
-    //           { urls: "stun:stun4.l.google.com:19302" },
-    //         ],
-    //       },
-    //     });
-    //     peer.on("signal", (data) => {
-    //       if (data.renegotiate || data.transceiverRequest) return;
-    //       socket.current.emit("call-user", {
-    //         callType: AUDIOCALL,
-    //         userToCall: callee._id,
-    //         from: socket.current.id,
-    //         userId: auth.user._id,
-    //         name: auth.user.name,
-    //         avatar: auth.user.avatar,
-    //         signalData: JSON.stringify(data),
-    //       });
-    //     });
-    //     peer.on("stream", (stream) => {
-    //       partnerStream.current.srcObject = stream;
-    //     });
-    //     // call accepted:
-    //     socket.current.on("call-accepted", (data) => {
-    //       console.log("caller call callee successfully");
-    //       peer.signal(data.signalData);
-    //     });
-    //     peerRef.current = peer;
-    //   });
+  const handleGrAudioCalling = (conversation, callees) => {
+    // console.log("gr caller call");
+    setGrCallees(callees);
+    setCallingType(AUDIOCALL);
+    setIsGrCalling(true);
+    setCallingConversation(conversation);
+
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+      })
+      .then((stream) => {
+        setIsGrCallAccepted(true);
+        myStream.current.srcObject = stream;
+
+        // TODO:
+        // const peer = new Peer({
+        //   initiator: true,
+        //   trickle: false,
+        //   stream: stream,
+        //   config: {
+        //     iceServers: [
+        //       { urls: "stun:stun.l.google.com:19302" },
+        //       { urls: "stun:stun1.l.google.com:19302" },
+        //       // { urls: "stun:stun2.l.google.com:19302" },
+        //       // { urls: "stun:stun3.l.google.com:19302" },
+        //       // { urls: "stun:stun4.l.google.com:19302" },
+        //     ],
+        //   },
+        // });
+
+        callees.forEach((callee) => {
+          // peer.on("signal", (data) => {
+          //   if (data.renegotiate || data.transceiverRequest) return;
+          //   socket.current.emit("gr-call-user", {
+          //     conversation,
+          //     callType: VIDEOCALL,
+          //     userToCall: callee._id,
+          //     from: socket.current.id,
+          //     userId: auth.user._id,
+          //     name: auth.user.name,
+          //     avatar: auth.user.avatar,
+          //     signalData: JSON.stringify(data),
+          //   });
+          // });
+          // peer.on("stream", (stream1) => {
+          //   partnerStream.current.srcObject = stream1;
+          // });
+          // call accepted:
+          // socket.current.on("call-accepted", (data) => {
+          //   console.log("caller call callee successfully");
+          //   peer.signal(data.signalData);
+          // });
+
+          socket.current.emit("gr-call-user", {
+            conversation,
+            callType: AUDIOCALL,
+            userToCall: callee._id,
+            from: socket.current.id,
+            userId: auth.user._id,
+            name: auth.user.name,
+            avatar: auth.user.avatar,
+            signalData: JSON.stringify({}),
+          });
+        });
+
+        //peerRef.current = peer;
+      });
   };
 
   const handleGrVideoCalling = (conversation, callees) => {
-    console.log("gr caller call");
+    // console.log("gr caller call");
     setGrCallees(callees);
     setCallingType(VIDEOCALL);
     setIsGrCalling(true);
+    setCallingConversation(conversation);
 
     navigator.mediaDevices
       .getUserMedia({
@@ -605,7 +630,7 @@ function Home() {
   };
 
   const handleGrCallCanceling = () => {
-    console.log("gr call canceling");
+    // console.log("gr call canceling");
     socket.current.emit("gr-end-call", {
       conversation: callingConversation,
     });
@@ -614,7 +639,7 @@ function Home() {
   };
 
   const handleGrCallAccepting = () => {
-    console.log("gr callee accepting call");
+    // console.log("gr callee accepting call");
     setIsGrCallAccepted(true);
     navigator.mediaDevices
       .getUserMedia({
@@ -651,6 +676,7 @@ function Home() {
         const peer = {
           newPeer: "newPeer",
           name: grCallerUser.name,
+          avatar: grCallerUser.avatar,
         };
 
         socket.current.emit("gr-call-accepted", {
@@ -749,6 +775,8 @@ function Home() {
             otherMemberPeers={otherMemberPeers}
             partnerStream={partnerStream}
             handleGrCallCanceling={handleGrCallCanceling}
+            conversation={callingConversation}
+            auth={auth}
           />
         </div>
       )}
@@ -793,7 +821,7 @@ function Home() {
                 setLastestSentMsg={handleLastestSentMsg}
                 handleAudioCalling={handleAudioCalling}
                 handleVideoCalling={handleVideoCalling}
-                handleGrAudioCalling={handleGrVideoCalling}
+                handleGrAudioCalling={handleGrAudioCalling}
                 handleGrVideoCalling={handleGrVideoCalling}
               />
             }

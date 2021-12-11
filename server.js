@@ -163,7 +163,11 @@ io.on("connection", (socket) => {
         socketId &&
           io
             .to(socketId)
-            .emit("gr-call-accepted", { ...data, joinerName: joiner.name });
+            .emit("gr-call-accepted", {
+              ...data,
+              joinerName: joiner.name,
+              joinerAvatar: joiner.avatar,
+            });
       });
     }
   });
